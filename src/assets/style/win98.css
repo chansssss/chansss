@@ -1,0 +1,181 @@
+:root {
+    --color-primary: #0700aa;
+    --color-primary-alt: #fff;
+    --gray: #cbcbcb;
+    --grayLight: #e5e5e5;
+    --white: #fff;
+    --grayDark: #929292;
+    --black: #000;
+    --highlightBackground: #008;
+    --highlightBackground2: #1084d0;
+    --highlightForeground: #fff;
+    --background-color: #088;
+    --px: 1px;
+    --touch-scale: 1.7;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.win98-icon{
+    width: 12px;
+    height: 10px;
+    position: absolute;
+    left: var(--px);
+    top: var(--px);
+}
+
+.win98-button{
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--gray);
+    color: #000;
+    border: #000;
+    border-left: var(--px) solid var(--white);
+    border-bottom: var(--px) solid var(--black);
+    border-right: var(--px) solid var(--black);
+    border-top: var(--px) solid var(--white);
+    font-size: 10px;
+    padding: 0 2px;
+    justify-content: center;
+}
+
+
+.win98-button::before{
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-color: #000;
+    border-left: var(--px) solid var(--grayLight);
+    border-bottom: var(--px) solid var(--grayDark);
+    border-right: var(--px) solid var(--grayDark);
+    border-top: var(--px) solid var(--grayLight);
+}
+
+.win98-button.win98-button--active, .win98-button:active:not([disabled]) {
+    border-color: var(--black) var(--white) var(--white) var(--black);
+}
+
+.win98-button.win98-button--active:before, .win98-button:active:not([disabled]):before {
+    border-color: var(--grayDark) var(--grayLight) var(--grayLight) var(--grayDark);
+}
+
+.win98-dialog{
+    min-height: 300px;
+    min-width: 300px;
+    box-sizing: border-box;
+    background: var(--gray);
+    color: var(--black);
+    border-color: var(--white) var(--black) var(--black) var(--white);
+    border-style: solid;
+    border-width: 1px;
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+.win98-dialog--header{
+    display: flex;
+    flex-direction: row;
+    font-family: system;
+    font-size: 10px;
+    font-weight: 700;
+    background: linear-gradient(
+    90deg
+    ,var(--highlightBackground),var(--highlightBackground2));
+    margin: 1px 2px 0;
+    line-height: 18px;
+    color: var(--white);
+    padding: 0 0 0 3px;
+}
+
+.win98-dialog--header > .win98-dialog--buttons{
+    display: flex;
+    margin: 2px 2px 0 4px;
+}
+
+.win98-dialog--header > .win98-dialog--title{
+    flex: 1;
+    width: calc(100% - 5em);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.win98-dialog--header > .win98-dialog--dragmove-bar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 5em);
+    height: 18px;
+}
+
+.win98-dialog--header > .win98-dialog--buttons > .win98-button{
+    width: 16px;
+    height: 14px;
+    display: inline-block;
+}
+
+.win98-dialog__resize-left,.win98-dialog__resize-right{
+    position: absolute;
+    top: 0;
+    z-index: 20000;
+    height: 100%;
+    width: 5px;
+    cursor: ew-resize;
+}
+
+.win98-dialog__resize-right{
+    right: 0;
+}
+
+.win98-dialog__resize-left{
+    left: 0;
+}
+
+.win98-dialog__resize-top,.win98-dialog__resize-bottom{
+    position: absolute;
+    left: 0;
+    z-index: 20000;
+    width: 100%;
+    cursor: ns-resize;
+}
+
+
+.win98-dialog__resize-top{
+    top: 0;
+    height: 3px;
+}
+
+.win98-dialog__resize-bottom{
+    bottom: 0;
+    height: 5px;
+}
+
+.win98-dialog__resize-corner{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 20000;
+    width: 10px;
+    height: 10px;
+    cursor: nwse-resize;
+}
+
+
+.win98-text{
+    font-family: helvetica,arial,sans-sans-serif;
+    margin: 0;
+    padding: 0;
+}
