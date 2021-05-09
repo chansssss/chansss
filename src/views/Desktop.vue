@@ -1,11 +1,20 @@
 <template>
   <div class="desktop">
     <div class="windowarea">
-        <Win98Dialog></Win98Dialog>
+      <template v-for="(application, index) in applications" :key="index">
+        <component v-bind:is="application.componentName"></component>
+      </template>
     </div>
     <div class="footer">
       <div class="startmenu">
         <button class="win98-button btn-startmenu">Start</button>
+      </div>
+      <div class="taskbar">
+        <template v-for="(application, index) in applications" :key="index">
+          <button class="win98-button taskbar-item" :class="application.actived?'win98-button--active':''">
+            {{ application.name }}
+          </button>
+        </template>
       </div>
     </div>
   </div>
@@ -13,10 +22,27 @@
 
 <script>
 // @ is an alias to /src
-import Win98Dialog from "@/components/Win98Dialog";
+import MyComputer from "@/views/my-computer";
 export default {
   name: "Home",
-  components: {Win98Dialog},
+  components: { MyComputer },
+  data() {
+    return {
+      applications: [
+        {
+          componentName: "MyComputer",
+          name: "我的电脑",
+          actived: true,
+          index: 1
+        }, {
+          componentName: "MyComputer",
+          name: "我的电脑1",
+          actived: true,
+          index: 1
+        },
+      ],
+    };
+  },
 };
 </script>
 
@@ -40,7 +66,7 @@ export default {
 }
 .windowarea {
   position: relative;
-  height: calc(100% - 24px);
+  height: calc(100% - 28px);
   overflow: hidden;
 }
 .footer {
@@ -59,7 +85,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 22px;
+  height: 28px;
   padding: 4px 2px 2px;
   box-shadow: 0 calc(var(--px) * -1) 0 var(--graylight);
   z-index: 90;
@@ -75,6 +101,23 @@ export default {
       height: 100%;
       font-weight: 700;
     }
+  }
+}
+
+.taskbar {
+  display: flex;
+  margin-left: 2px;
+  .taskbar-item {
+    width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    justify-content: start;
+    padding-left: 3px;
+    margin-right: 3px;
+    text-align: left;
+    height: 100%;
+    display: flex;
   }
 }
 </style>

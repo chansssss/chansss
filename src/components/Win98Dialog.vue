@@ -17,9 +17,9 @@
             alt=""
           />
         </button>
-        <button class="win98-button">
+        <button class="win98-button" @click="dialogMaximize" v-show="!isMaximize">
           <img
-            class="ui95-icon ui95-icon--window-maximize ui95-icon--custom ui95-icon--"
+            class="win98-icon maximize"
             size="custom"
             name="window-maximize"
             title="Maximize"
@@ -27,9 +27,12 @@
             alt=""
           />
         </button>
+        <button class="win98-button" @click="dialogRestore" v-show="isMaximize">
+          <img class="win98-icon restore" size="custom" name="window-restore" title="Restore" src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWjI8ZwK3tEkDzQLbozVZX83HUKG1HAQA7" alt="">
+        </button>
         <button class="win98-button">
           <img
-            class="ui95-icon ui95-icon--window-close ui95-icon--custom ui95-icon--"
+            class="win98-icon close"
             size="custom"
             name="window-close"
             title="Close"
@@ -39,7 +42,9 @@
         </button>
       </div>
     </div>
-    <div class="win98-dialog--content"></div>
+    <div class="win98-dialog--content">
+      <slot></slot>
+    </div>
     <div class="win98-dialog--footer"></div>
     <div
       class="win98-dialog__resize-left"
@@ -73,9 +78,39 @@ export default {
   data() {
     return {
       title: "我的电脑",
+      isMaximize: false,
+      dialog:{
+        top:0,
+        left:0,
+        width:0,
+        height:0
+      }
     };
   },
   methods: {
+    dialogMaximize(e){
+      let dom = e.path[4]
+      this.dialog.width = dom.offsetWidth
+      this.dialog.height = dom.offsetHeight
+      this.dialog.top = dom.offsetTop
+      this.dialog.left = dom.offsetLeft
+      dom.style.top = 0
+      dom.style.left = 0
+      dom.style.width = "100vw"
+      dom.style.height = "calc(100vh - 28px)"
+      this.isMaximize = true
+      console.log(this.dialog);
+    },
+    dialogRestore(e){
+      console.log(this.dialog);
+      let dom = e.path[4]
+      console.log(dom);
+      dom.style.top = this.dialog.top + "px"
+      dom.style.left = this.dialog.left + "px"
+      dom.style.width = this.dialog.width + "px"
+      dom.style.height = this.dialog.height + "px"
+      this.isMaximize = false
+    },
     initEvents() {},
     commonMoveEvent(dom, e, callBack) {
       //获取鼠标按下的坐标
