@@ -6,7 +6,7 @@
           class="application-shortcut"
           v-for="(application, index) in applications"
           :key="index"
-          @click="launchApplicationBefore($event,application)"
+          @click="launchApplicationBefore($event, application)"
         >
           <div class="application-shortcut--icon">
             <img
@@ -52,11 +52,9 @@
 
 <script>
 // @ is an alias to /src
-import MyComputer from "@/views/my-computer";
 import { v4 as uuidv4 } from "uuid";
 export default {
   name: "Home",
-  components: { MyComputer },
   data() {
     return {
       applications: [
@@ -69,10 +67,15 @@ export default {
       ],
       windows: [],
       zIndex: 9527,
+      applicationWaitMap: {},
     };
   },
   methods: {
-    launchApplicationBefore(event,application) {
+    launchApplicationBefore(event, application) {
+      if (this.applicationWaitMap[application.componentName]) {
+        return;
+      }
+      this.applicationWaitMap[application.componentName] = true;
       let window = {
         componentName: application.componentName,
         actived: true,
@@ -83,18 +86,19 @@ export default {
       };
       if (application.hasLaunched) {
         if (application.hasMultiple) {
-          this.launchApplication(window)
+          this.launchApplication(window);
         }
       } else {
-        this.launchApplication(window)
+        this.launchApplication(window);
       }
     },
     launchApplication(window) {
-      document.body.style.cursor = "wait"
+      document.body.style.cursor = "wait";
       setTimeout(() => {
-        this.unactivedAllWindow()
+        this.unactivedAllWindow();
         this.windows.push(window);
-        document.body.style.cursor = "default"
+        this.applicationWaitMap[window.componentName] = false;
+        document.body.style.cursor = "default";
       }, 300);
     },
     unactivedAllWindow() {
@@ -106,6 +110,7 @@ export default {
     activeWindow(uuid) {
       let window = this.getWindowByUUID(uuid);
       if (window) {
+        this.unactivedAllWindow()
         window.actived = true;
         window.minimize = false;
       }
@@ -237,9 +242,12 @@ export default {
 
 .taskbar {
   display: flex;
+  flex: 1;
+  overflow: hidden;
   margin-left: 2px;
   .taskbar-item {
     width: 160px;
+    flex-shrink: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
