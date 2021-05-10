@@ -1,9 +1,7 @@
 <template>
-  <div class="my-computer">
-    <Win98Dialog>
-        <h1>我的电脑</h1>
-    </Win98Dialog>
-  </div>
+  <Win98Dialog @eventCallBack="eventCallBack">
+    <h1>我的电脑</h1>
+  </Win98Dialog>
 </template>
 
 <script>
@@ -11,19 +9,39 @@
 import Win98Dialog from "@/components/Win98Dialog";
 export default {
   name: "Home",
-  components: {Win98Dialog},
-  data(){
-    return{
-      
-    }
-  }
+  props: {
+    uuid: {
+      type: String,
+      required: true,
+    },
+    windowEventCallBack: {
+      type: Function,
+      required: true,
+    },
+  },
+  components: { Win98Dialog },
+  created() {
+    console.log(this.uuid);
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    eventCallBack({ event, eventName }) {
+      this.$emit("windowEventCallBack", {
+        uuid: this.uuid,
+        event: event,
+        eventName: eventName,
+      });
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
-.my-computer{
-    width: auto;
-    height: auto;
-    position: absolute;
+.my-computer {
+  width: auto;
+  height: auto;
+  position: absolute;
 }
 </style>

@@ -1,8 +1,13 @@
 <template>
   <div class="desktop">
     <div class="windowarea">
-      <template v-for="(application, index) in applications" :key="index">
-        <component v-bind:is="application.componentName"></component>
+      <template v-for="(window, index) in windows" :key="index">
+        <component
+          v-bind:is="window.componentName"
+          v-show="!window.minimize"
+          :uuid="window.uuid"
+          @windowEventCallBack="windowEventCallBack"
+        ></component>
       </template>
     </div>
     <div class="footer">
@@ -10,9 +15,12 @@
         <button class="win98-button btn-startmenu">Start</button>
       </div>
       <div class="taskbar">
-        <template v-for="(application, index) in applications" :key="index">
-          <button class="win98-button taskbar-item" :class="application.actived?'win98-button--active':''">
-            {{ application.name }}
+        <template v-for="(window, index) in windows" :key="index">
+          <button
+            class="win98-button taskbar-item"
+            :class="window.actived ? 'win98-button--active' : ''"
+          >
+            {{ window.name }}
           </button>
         </template>
       </div>
@@ -23,25 +31,53 @@
 <script>
 // @ is an alias to /src
 import MyComputer from "@/views/my-computer";
+import { v4 as uuidv4 } from "uuid";
 export default {
   name: "Home",
   components: { MyComputer },
   data() {
     return {
-      applications: [
+      windows: [
         {
           componentName: "MyComputer",
+          actived: true,
           name: "我的电脑",
-          actived: true,
-          index: 1
-        }, {
-          componentName: "MyComputer",
-          name: "我的电脑1",
-          actived: true,
-          index: 1
-        },
+          minimize: false,
+          uuid: uuidv4(),
+        }
       ],
     };
+  },
+  methods: {
+    windowEventCallBack({ uuid, eventName }) {
+      let window = this.getWindowByUUID(uuid)
+      if (window) {
+        if (eventName === 'minimize') {
+          window.minimize = true
+        }
+        if (eventName === 'close') {
+          this.deleteWindowByUUID(uuid)
+        }
+      }
+    },
+    getWindowByUUID(uuid){
+      let window = null
+      for (let i = 0; i < this.windows.length; i++) {
+        const element = this.windows[i];
+        if (element.uuid === uuid) {
+          window = element
+          window.index = i
+          return window
+        }
+      }
+      return window
+    },
+    deleteWindowByUUID(uuid){
+      let window = this.getWindowByUUID(uuid)
+      if (window) {
+        this.windows.splice(window.index,1)
+      }
+    }
   },
 };
 </script>

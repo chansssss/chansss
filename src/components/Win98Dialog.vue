@@ -7,7 +7,7 @@
       ></div>
       <div class="win98-dialog--title title win98-text">{{ title }}</div>
       <div class="win98-dialog--buttons">
-        <button class="win98-button">
+        <button class="win98-button" @click="commonClick($event, 'minimize')">
           <img
             class="win98-icon"
             size="custom"
@@ -17,7 +17,11 @@
             alt=""
           />
         </button>
-        <button class="win98-button" @click="dialogMaximize" v-show="!isMaximize">
+        <button
+          class="win98-button"
+          @click="dialogMaximize"
+          v-show="!isMaximize"
+        >
           <img
             class="win98-icon maximize"
             size="custom"
@@ -28,9 +32,16 @@
           />
         </button>
         <button class="win98-button" @click="dialogRestore" v-show="isMaximize">
-          <img class="win98-icon restore" size="custom" name="window-restore" title="Restore" src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWjI8ZwK3tEkDzQLbozVZX83HUKG1HAQA7" alt="">
+          <img
+            class="win98-icon restore"
+            size="custom"
+            name="window-restore"
+            title="Restore"
+            src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWjI8ZwK3tEkDzQLbozVZX83HUKG1HAQA7"
+            alt=""
+          />
         </button>
-        <button class="win98-button">
+        <button class="win98-button" @click="commonClick($event, 'close')">
           <img
             class="win98-icon close"
             size="custom"
@@ -71,45 +82,51 @@
 
 <script>
 export default {
-  name: "HelloWorld",
+  name: "Win98Dialog",
   props: {
-    msg: String,
+    eventCallBack: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
       title: "我的电脑",
       isMaximize: false,
-      dialog:{
-        top:0,
-        left:0,
-        width:0,
-        height:0
-      }
+      dialog: {
+        top: 0,
+        left: 0,
+        width: 0,
+        height: 0,
+      },
     };
   },
   methods: {
-    dialogMaximize(e){
-      let dom = e.path[4]
-      this.dialog.width = dom.offsetWidth
-      this.dialog.height = dom.offsetHeight
-      this.dialog.top = dom.offsetTop
-      this.dialog.left = dom.offsetLeft
-      dom.style.top = 0
-      dom.style.left = 0
-      dom.style.width = "100vw"
-      dom.style.height = "calc(100vh - 28px)"
-      this.isMaximize = true
+    commonClick(event, eventName) {
+      this.$emit("eventCallBack", { event: event, eventName: eventName });
+    },
+    dialogMaximize(e) {
+      let dom = e.path[4];
+      this.dialog.width = dom.offsetWidth;
+      this.dialog.height = dom.offsetHeight;
+      this.dialog.top = dom.offsetTop;
+      this.dialog.left = dom.offsetLeft;
+      dom.style.top = 0;
+      dom.style.left = 0;
+      dom.style.width = "100vw";
+      dom.style.height = "calc(100vh - 28px)";
+      this.isMaximize = true;
       console.log(this.dialog);
     },
-    dialogRestore(e){
+    dialogRestore(e) {
       console.log(this.dialog);
-      let dom = e.path[4]
+      let dom = e.path[4];
       console.log(dom);
-      dom.style.top = this.dialog.top + "px"
-      dom.style.left = this.dialog.left + "px"
-      dom.style.width = this.dialog.width + "px"
-      dom.style.height = this.dialog.height + "px"
-      this.isMaximize = false
+      dom.style.top = this.dialog.top + "px";
+      dom.style.left = this.dialog.left + "px";
+      dom.style.width = this.dialog.width + "px";
+      dom.style.height = this.dialog.height + "px";
+      this.isMaximize = false;
     },
     initEvents() {},
     commonMoveEvent(dom, e, callBack) {
