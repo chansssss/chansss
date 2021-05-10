@@ -46,6 +46,26 @@
           </button>
         </template>
       </div>
+      <div class="corner-box">
+        <div class="network corner-box--icon">
+          <img :src="networkImg" alt="">
+        </div>
+        <div class="sound corner-box--icon">
+          <img
+            class="ui95-icon ui95-icon--sound ui95-icon--16 ui95-icon--"
+            size="16"
+            name="sound"
+            title="volume"
+            width="16"
+            height="16"
+            src="data:image/gif;base64,R0lGODlhEAAQAOMDAAABAHd5dnh6d7e4ALe5tvf4A/b59vj697e4ALe4ALe4ALe4ALe4ALe4ALe4ALe4ACH5BAEKAAYALAAAAAAQABAAAARR0MhpAKCYjgBCxkMBEMQ3hUFAHJ7USuExHqx7xuJav8OxFjIA7QUrEIA5IdEQ+sk4uxRng7QMM5bYrPYBhLaepcSbuhrElcGI8BJ01WjsJRMBADs="
+            alt=""
+          />
+        </div>
+        <div class="time">
+          <p>8:20 PM</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -54,7 +74,7 @@
 // @ is an alias to /src
 import { v4 as uuidv4 } from "uuid";
 export default {
-  name: "Home",
+  name: "Desktop",
   data() {
     return {
       applications: [
@@ -63,7 +83,8 @@ export default {
           hasMultiple: true,
           hasLaunched: false,
           componentName: "MyComputer",
-        },{
+        },
+        {
           name: "关于我",
           hasMultiple: false,
           hasLaunched: false,
@@ -73,6 +94,7 @@ export default {
       windows: [],
       zIndex: 9527,
       applicationWaitMap: {},
+      networkImg: require('@/assets/imgs/network.png')
     };
   },
   methods: {
@@ -92,27 +114,32 @@ export default {
       };
       if (application.hasLaunched) {
         if (application.hasMultiple) {
+          application.hasLaunched = true
           this.launchApplication(window);
-        }else{
-          let applicationWindows = this.getWindowByApplication(application)
+        } else {
+          let applicationWindows = this.getWindowByApplication(application);
           if (applicationWindows) {
-            this.activeWindow(applicationWindows[0].uuid)
+            this.activeWindow(applicationWindows[0].uuid);
+          }else{
+            application.hasLaunched = false
+            this.launchApplication(window);
           }
         }
       } else {
+        application.hasLaunched = true
         this.launchApplication(window);
       }
     },
     // 根据应用获取打开的窗口
-    getWindowByApplication(application){
-      let applicationWindows = []
+    getWindowByApplication(application) {
+      let applicationWindows = [];
       for (let i = 0; i < this.windows.length; i++) {
         const element = this.windows[i];
         if (application.componentName === element.componentName) {
-          applicationWindows.push(element)
+          applicationWindows.push(element);
         }
       }
-      return applicationWindows.length>0? applicationWindows:null
+      return applicationWindows.length > 0 ? applicationWindows : null;
     },
     // 打开应用
     launchApplication(window) {
@@ -124,7 +151,7 @@ export default {
         document.body.style.cursor = "default";
       }, 300);
     },
-    // 
+    //
     unactivedAllWindow() {
       for (let i = 0; i < this.windows.length; i++) {
         const element = this.windows[i];
@@ -135,10 +162,10 @@ export default {
     activeWindow(uuid) {
       let window = this.getWindowByUUID(uuid);
       if (window) {
-        this.unactivedAllWindow()
+        this.unactivedAllWindow();
         window.actived = true;
         window.minimize = false;
-        window.zIndex = this.zIndex++
+        window.zIndex = this.zIndex++;
       }
     },
     // 应用窗口的事件回调
@@ -153,7 +180,7 @@ export default {
           this.deleteWindowByUUID(uuid);
         }
         if (eventName === "active") {
-          this.activeWindow(uuid)
+          this.activeWindow(uuid);
         }
       }
     },
@@ -269,25 +296,54 @@ export default {
       font-weight: 700;
     }
   }
-}
 
-.taskbar {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  margin-left: 2px;
-  .taskbar-item {
-    width: 160px;
-    flex-shrink: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    justify-content: start;
-    padding-left: 3px;
-    margin-right: 3px;
-    text-align: left;
-    height: 100%;
+  .taskbar {
     display: flex;
+    flex: 1;
+    overflow: hidden;
+    margin-left: 2px;
+    .taskbar-item {
+      width: 160px;
+      flex-shrink: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      justify-content: start;
+      padding-left: 3px;
+      margin-right: 3px;
+      text-align: left;
+      height: 100%;
+      display: flex;
+    }
+  }
+
+  .corner-box {
+    margin-right: 3px;
+    display: flex;
+    padding: 2px 3px;
+    align-items: center;
+    white-space: nowrap;
+    border-color: var(--grayDark) var(--grayLight) var(--grayLight)
+      var(--grayDark);
+    border-left: var(--px) solid var(--black);
+    border-bottom: var(--px) solid var(--white);
+    border-right: var(--px) solid var(--white);
+    border-top: var(--px) solid var(--black);
+    position: relative;
+    pointer-events: none;
+    .corner-box--icon{
+      margin-right: 5px;
+    width: 16px;
+    height: 16px;
+    }
+    .sound {
+      margin-right: 5px;
+      width: 16px;
+      height: 16px;
+    }
+    .time {
+      font-size: calc(10 * var(--px));
+    }
   }
 }
 </style>

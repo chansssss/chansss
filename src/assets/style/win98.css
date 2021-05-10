@@ -179,3 +179,32 @@
     margin: 0;
     padding: 0;
 }
+
+
+
+.win98-toolbar{
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    background: var(--gray);
+    color: #000;
+    border-color: #000;
+    border-left: var(--px) solid var(--grayLight);
+    border-bottom: var(--px) solid var(--grayDark);
+    border-right: var(--px) solid var(--grayDark);
+    border-top: var(--px) solid var(--grayLight);
+    padding: var(--px) 3px;
+    font-family: system;
+    font-size: 10px;
+}
+
+.win98-toolbar > .win98-toolbar--left{
+    margin-right: 1px;
+    display: block;
+    width: calc(3 * var(--px));
+    min-height: 16px;
+    border-left: var(--px) solid var(--white);
+    border-top: var(--px) solid var(--white);
+    border-right: var(--px) solid var(--grayDark);
+    border-bottom: var(--px) solid var(--grayDark);
+}

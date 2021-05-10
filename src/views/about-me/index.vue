@@ -8,14 +8,10 @@
 // @ is an alias to /src
 import Win98Dialog from "@/components/Win98Dialog";
 export default {
-  name: "Home",
+  name: "AboutMe",
   props: {
     window: {
       type: Object,
-      required: true,
-    },
-    windowEventCallBack: {
-      type: Function,
       required: true,
     },
   },

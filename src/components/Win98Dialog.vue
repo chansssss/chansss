@@ -87,11 +87,7 @@ export default {
     zIndex: {
       type: Number,
       required: true,
-    },
-    eventCallBack: {
-      type: Function,
-      required: true,
-    },
+    }
   },
   computed: {
     dialogStyle() {
@@ -114,6 +110,9 @@ export default {
   },
   methods: {
     commonClick(event, eventName) {
+      if (eventName === 'minimize') {
+        event.stopPropagation()
+      }
       this.$emit("eventCallBack", { event: event, eventName: eventName });
     },
     dialogMaximize(e) {
@@ -130,7 +129,6 @@ export default {
       console.log(this.dialog);
     },
     dialogRestore(e) {
-      console.log(this.dialog);
       let dom = e.path[4];
       console.log(dom);
       dom.style.top = this.dialog.top + "px";
@@ -244,8 +242,14 @@ export default {
 
 <style lang="less" scoped>
 .win98-dialog {
-  top: 0;
-  left: 0;
+  height: 400px;
+  width: 600px;
+  top: 150px;
+  left: 200px;
+}
+.win98-dialog--content{
+  height: 100%;
+  width: 100%;
 }
 .header {
   min-height: 18px;
