@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog @eventCallBack="eventCallBack">
+  <Win98Dialog @eventCallBack="eventCallBack" :zIndex="window.zIndex">
     <h1>我的电脑</h1>
   </Win98Dialog>
 </template>
@@ -10,8 +10,8 @@ import Win98Dialog from "@/components/Win98Dialog";
 export default {
   name: "Home",
   props: {
-    uuid: {
-      type: String,
+    window: {
+      type: Object,
       required: true,
     },
     windowEventCallBack: {
@@ -21,7 +21,6 @@ export default {
   },
   components: { Win98Dialog },
   created() {
-    console.log(this.uuid);
   },
   data() {
     return {};
@@ -29,7 +28,7 @@ export default {
   methods: {
     eventCallBack({ event, eventName }) {
       this.$emit("windowEventCallBack", {
-        uuid: this.uuid,
+        uuid: this.window.uuid,
         event: event,
         eventName: eventName,
       });

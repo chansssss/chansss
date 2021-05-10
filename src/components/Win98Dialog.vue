@@ -1,5 +1,5 @@
 <template>
-  <div class="win98-dialog">
+  <div class="win98-dialog" :style="dialogStyle">
     <div class="win98-dialog--header header">
       <div
         class="win98-dialog--dragmove-bar"
@@ -84,9 +84,20 @@
 export default {
   name: "Win98Dialog",
   props: {
+    zIndex: {
+      type: Number,
+      required: true,
+    },
     eventCallBack: {
       type: Function,
       required: true,
+    },
+  },
+  computed: {
+    dialogStyle() {
+      return {
+        "z-index": this.zIndex,
+      };
     },
   },
   data() {
@@ -232,6 +243,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.win98-dialog {
+  top: 0;
+  left: 0;
+}
 .header {
   min-height: 18px;
 }

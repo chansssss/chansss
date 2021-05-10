@@ -1,11 +1,32 @@
 <template>
   <div class="desktop">
     <div class="windowarea">
+      <div class="application-container">
+        <div
+          class="application-shortcut"
+          v-for="(application, index) in applications"
+          :key="index"
+          @click="launchApplicationBefore($event,application)"
+        >
+          <div class="application-shortcut--icon">
+            <img
+              size="32"
+              name="mycomputer"
+              classnames="file-icon"
+              width="32"
+              height="32"
+              src="data:image/gif;base64,R0lGODlhIAAgAIQfAAAAABgYGCEhIQAxMQAxnDExnABjY1JSUlpaWgCAAGNjYwCAgACcnISEhJSUlJycnJyczjHOzq2tlM6c/7W1tcDAwJzO/zH/Y87Ozs7O/+fn1ufn5+/v7///9////wQz/yH5BAEKAB8ALAAAAAAgACAAAAX+4CeO42OeaJqSrPhoVSzPtNwAbentfM/9wF+locDlHp6fRsNZNpnOKLGY+zw6moF2y+3CpsYWMssoMxbnhUFtaHOGCurRQ44wCvh8Xv2Nh1ljA2YFFhmGhwR8cHJiHhuCenoEGYkGfYyAHRyQEJ2eEAQTAYpgVYF3Gj1LARmjlot/JKcFqTtLGAG5pH6mjpBLwBi4C2yXsSWakHm5zGq7mLJYA8TU1c5txqbSXdxb2UeaGxob5OXm5rCmMDXsM2AKRwoIB/T08/X4+QAKDwI5AAADChxIkJ+CAIDiKFzIsGGcB3EQynoC7JYwDBIySnDgwESDKQcBabiQwKIMjRJtBAjIJeAjSIklTFZAmVHFA5cKYX5wybOnT585S1CoSDEKUaIQQ5Z4AwBG0wpNJTR9MLWqhqQ6HzBl6pSDVA1SOVC9CuBNRFlOYwBQyxZqBapvAbyAmLVoxbsXMZyUQBeQzb9/lcpySJiwzhEhAAA7"
+              alt=""
+            />
+          </div>
+          <div class="application-shortcut--name">{{ application.name }}</div>
+        </div>
+      </div>
       <template v-for="(window, index) in windows" :key="index">
         <component
           v-bind:is="window.componentName"
           v-show="!window.minimize"
-          :uuid="window.uuid"
+          :window="window"
           @windowEventCallBack="windowEventCallBack"
         ></component>
       </template>
@@ -19,6 +40,7 @@
           <button
             class="win98-button taskbar-item"
             :class="window.actived ? 'win98-button--active' : ''"
+            @click="activeWindow(window.uuid)"
           >
             {{ window.name }}
           </button>
@@ -37,47 +59,87 @@ export default {
   components: { MyComputer },
   data() {
     return {
-      windows: [
+      applications: [
         {
-          componentName: "MyComputer",
-          actived: true,
           name: "我的电脑",
-          minimize: false,
-          uuid: uuidv4(),
-        }
+          hasMultiple: true,
+          hasLaunched: false,
+          componentName: "MyComputer",
+        },
       ],
+      windows: [],
+      zIndex: 9527,
     };
   },
   methods: {
-    windowEventCallBack({ uuid, eventName }) {
-      let window = this.getWindowByUUID(uuid)
-      if (window) {
-        if (eventName === 'minimize') {
-          window.minimize = true
+    launchApplicationBefore(event,application) {
+      let window = {
+        componentName: application.componentName,
+        actived: true,
+        name: application.name,
+        minimize: false,
+        zIndex: this.zIndex++,
+        uuid: uuidv4(),
+      };
+      if (application.hasLaunched) {
+        if (application.hasMultiple) {
+          this.launchApplication(window)
         }
-        if (eventName === 'close') {
-          this.deleteWindowByUUID(uuid)
+      } else {
+        this.launchApplication(window)
+      }
+    },
+    launchApplication(window) {
+      document.body.style.cursor = "wait"
+      setTimeout(() => {
+        this.unactivedAllWindow()
+        this.windows.push(window);
+        document.body.style.cursor = "default"
+      }, 300);
+    },
+    unactivedAllWindow() {
+      for (let i = 0; i < this.windows.length; i++) {
+        const element = this.windows[i];
+        element.actived = false;
+      }
+    },
+    activeWindow(uuid) {
+      let window = this.getWindowByUUID(uuid);
+      if (window) {
+        window.actived = true;
+        window.minimize = false;
+      }
+    },
+    windowEventCallBack({ uuid, eventName }) {
+      let window = this.getWindowByUUID(uuid);
+      if (window) {
+        if (eventName === "minimize") {
+          window.minimize = true;
+          window.actived = false;
+        }
+        if (eventName === "close") {
+          this.deleteWindowByUUID(uuid);
         }
       }
     },
-    getWindowByUUID(uuid){
-      let window = null
+    getWindowByUUID(uuid) {
+      let window = null;
       for (let i = 0; i < this.windows.length; i++) {
         const element = this.windows[i];
         if (element.uuid === uuid) {
-          window = element
-          window.index = i
-          return window
+          window = element;
+          window.index = i;
+          return window;
         }
       }
-      return window
+      return window;
     },
-    deleteWindowByUUID(uuid){
-      let window = this.getWindowByUUID(uuid)
+    deleteWindowByUUID(uuid) {
+      let window = this.getWindowByUUID(uuid);
       if (window) {
-        this.windows.splice(window.index,1)
+        this.windows.splice(window.index, 1);
       }
-    }
+    },
   },
 };
 </script>
@@ -104,6 +166,39 @@ export default {
   position: relative;
   height: calc(100% - 28px);
   overflow: hidden;
+  .application-container {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    .application-shortcut {
+      display: block;
+      width: 65px;
+      margin: 5px 5px 15px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--black);
+      .application-shortcut--name {
+        margin-top: 5px;
+        font-size: calc(10 * var(--px));
+        background: var(--background-color);
+        color: var(--color-primary-alt);
+      }
+      .application-shortcut--icon {
+        margin: auto;
+        width: 32px;
+        height: 32px;
+        img {
+          margin: auto;
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
+  }
 }
 .footer {
   display: flex;
