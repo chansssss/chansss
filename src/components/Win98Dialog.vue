@@ -1,5 +1,5 @@
 <template>
-  <div class="win98-dialog" :style="dialogStyle">
+  <div class="win98-dialog" :style="dialogStyle" @click="commonClick($event, 'active')">
     <div class="win98-dialog--header header">
       <div
         class="win98-dialog--dragmove-bar"

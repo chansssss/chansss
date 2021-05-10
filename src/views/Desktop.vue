@@ -113,6 +113,7 @@ export default {
         this.unactivedAllWindow()
         window.actived = true;
         window.minimize = false;
+        window.zIndex = this.zIndex++
       }
     },
     windowEventCallBack({ uuid, eventName }) {
@@ -124,6 +125,9 @@ export default {
         }
         if (eventName === "close") {
           this.deleteWindowByUUID(uuid);
+        }
+        if (eventName === "active") {
+          this.activeWindow(uuid)
         }
       }
     },
