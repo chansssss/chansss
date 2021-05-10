@@ -63,6 +63,11 @@ export default {
           hasMultiple: true,
           hasLaunched: false,
           componentName: "MyComputer",
+        },{
+          name: "关于我",
+          hasMultiple: false,
+          hasLaunched: false,
+          componentName: "AboutMe",
         },
       ],
       windows: [],
@@ -71,6 +76,7 @@ export default {
     };
   },
   methods: {
+    // 启动应用的前置操作
     launchApplicationBefore(event, application) {
       if (this.applicationWaitMap[application.componentName]) {
         return;
@@ -87,11 +93,28 @@ export default {
       if (application.hasLaunched) {
         if (application.hasMultiple) {
           this.launchApplication(window);
+        }else{
+          let applicationWindows = this.getWindowByApplication(application)
+          if (applicationWindows) {
+            this.activeWindow(applicationWindows[0].uuid)
+          }
         }
       } else {
         this.launchApplication(window);
       }
     },
+    // 根据应用获取打开的窗口
+    getWindowByApplication(application){
+      let applicationWindows = []
+      for (let i = 0; i < this.windows.length; i++) {
+        const element = this.windows[i];
+        if (application.componentName === element.componentName) {
+          applicationWindows.push(element)
+        }
+      }
+      return applicationWindows.length>0? applicationWindows:null
+    },
+    // 打开应用
     launchApplication(window) {
       document.body.style.cursor = "wait";
       setTimeout(() => {
@@ -101,12 +124,14 @@ export default {
         document.body.style.cursor = "default";
       }, 300);
     },
+    // 
     unactivedAllWindow() {
       for (let i = 0; i < this.windows.length; i++) {
         const element = this.windows[i];
         element.actived = false;
       }
     },
+    // 根据uuid激活应用窗口
     activeWindow(uuid) {
       let window = this.getWindowByUUID(uuid);
       if (window) {
@@ -116,6 +141,7 @@ export default {
         window.zIndex = this.zIndex++
       }
     },
+    // 应用窗口的事件回调
     windowEventCallBack({ uuid, eventName }) {
       let window = this.getWindowByUUID(uuid);
       if (window) {
@@ -131,6 +157,7 @@ export default {
         }
       }
     },
+    // 根据uuid获取应用窗口
     getWindowByUUID(uuid) {
       let window = null;
       for (let i = 0; i < this.windows.length; i++) {

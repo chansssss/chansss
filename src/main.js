@@ -7,6 +7,8 @@ var Vue = createApp(App)
 
 // 全局组件
 import MyComputer from "@/views/my-computer";
+import AboutMe from "@/views/about-me";
 Vue.component("MyComputer",MyComputer)
+Vue.component("AboutMe",AboutMe)
 
 Vue.use(router).mount('#app')
