@@ -33,6 +33,7 @@
     </div>
     <div class="footer">
       <div class="startmenu">
+        <StartMenu></StartMenu>
         <button class="win98-button btn-startmenu">Start</button>
       </div>
       <div class="taskbar">
@@ -63,7 +64,7 @@
           />
         </div>
         <div class="time">
-          <p>8:20 PM</p>
+          <p>{{nowTime}}</p>
         </div>
       </div>
     </div>
@@ -72,6 +73,8 @@
 
 <script>
 // @ is an alias to /src
+import dayjs from 'dayjs' // ES 2015
+
 import { v4 as uuidv4 } from "uuid";
 export default {
   name: "Desktop",
@@ -94,10 +97,16 @@ export default {
       windows: [],
       zIndex: 9527,
       applicationWaitMap: {},
+      nowTime: dayjs(new Date()).format("hh:mm A"),
       networkImg: require('@/assets/imgs/network.png')
     };
   },
   methods: {
+    updateTime(){
+      setInterval(() => {
+        this.nowTime = dayjs(new Date()).format("hh:mm A")
+      }, 1000);
+    },
     // 启动应用的前置操作
     launchApplicationBefore(event, application) {
       if (this.applicationWaitMap[application.componentName]) {
@@ -308,7 +317,7 @@ export default {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      justify-content: start;
+      justify-content: flex-start;
       padding-left: 3px;
       margin-right: 3px;
       text-align: left;

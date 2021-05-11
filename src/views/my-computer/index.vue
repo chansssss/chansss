@@ -69,7 +69,6 @@
 
 <script>
 // @ is an alias to /src
-import Win98Dialog from "@/components/Win98Dialog";
 export default {
   name: "MyComputer",
   props: {
@@ -78,7 +77,6 @@ export default {
       required: true,
     },
   },
-  components: { Win98Dialog },
   created() {
     this.nowFolder = this.folders
   },

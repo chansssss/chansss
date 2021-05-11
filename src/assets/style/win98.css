@@ -208,3 +208,30 @@
     border-right: var(--px) solid var(--grayDark);
     border-bottom: var(--px) solid var(--grayDark);
 }
+
+.win98-bezel{
+    display: block;
+    background: var(--gray);
+    border-color: #000;
+    border-left: var(--px) solid var(--grayLight);
+    border-bottom: var(--px) solid var(--black);
+    border-right: var(--px) solid var(--black);
+    border-top: var(--px) solid var(--grayLight);
+    position: relative;
+}
+
+.win98-bezel::before{
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-color: #000;
+    border-left: var(--px) solid var(--white);
+    border-bottom: var(--px) solid var(--grayDark);
+    border-right: var(--px) solid var(--grayDark);
+    border-top: var(--px) solid var(--white);
+    pointer-events: none;
+}

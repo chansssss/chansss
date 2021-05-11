@@ -6,7 +6,6 @@
 
 <script>
 // @ is an alias to /src
-import Win98Dialog from "@/components/Win98Dialog";
 export default {
   name: "AboutMe",
   props: {
@@ -15,7 +14,6 @@ export default {
       required: true,
     },
   },
-  components: { Win98Dialog },
   created() {
   },
   data() {
