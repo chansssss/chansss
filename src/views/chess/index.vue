@@ -130,110 +130,175 @@ export default {
         return this.canMoveOfChe(c_x, c_y, t_x, t_y);
       }
       if (currentPoint.name === "炮") {
-        return this.canMoveOfPao(c_x, c_y, t_x, t_y,targetPoint);
+        return this.canMoveOfPao(c_x, c_y, t_x, t_y, targetPoint);
       }
       if (currentPoint.name === "马") {
         return this.canMoveOfMa(c_x, c_y, t_x, t_y);
       }
       if (currentPoint.name === "象") {
+        if (this.isCrossRiver(currentPoint.type, t_x)) return false;
         return this.canMoveOfXiang(c_x, c_y, t_x, t_y);
+      }
+      if (currentPoint.name === "卒") {
+        return this.canMoveOfZu(c_x, c_y, t_x, t_y,currentPoint.type);
       }
       return true;
     },
+    isCrossRiver(type, t_x) {
+      if (type === "red" && t_x >= 5) return true;
+      if (type === "black" && t_x < 5) return true;
+      return false;
+    },
+    canMoveOfZu(c_x, c_y, t_x, t_y, currentType) {
+      let { count, axis, distance } = this.hasManyPoint(c_x, c_y, t_x, t_y);
+      console.log(count);
+      if (this.isCrossRiver(currentType, t_x)) {
+        if (axis === "y" && Math.abs(distance) === 1) {
+          return true;
+        }
+      }
+      if (currentType === "red") {
+        if (axis === "x" && distance < 0 && Math.abs(distance) === 1) {
+          return true;
+        }
+      } else {
+        if (axis === "x" && distance > 0 && Math.abs(distance) === 1) {
+          return true;
+        }
+      }
+    },
     // 判断车的落点是否合法
     canMoveOfChe(c_x, c_y, t_x, t_y) {
-      return this.hasManyPoint(c_x, c_y, t_x, t_y)===0
+      return this.hasManyPoint(c_x, c_y, t_x, t_y).count === 0;
     },
     // 判断马的落点是否合法
     canMoveOfMa(c_x, c_y, t_x, t_y) {
       //落点在马的上方
-      if (c_x-t_x===2 && Math.abs(c_y-t_y)===1 && this.chessboard[c_x-1][c_y].type==="none") {
-        return true
+      if (
+        c_x - t_x === 2 &&
+        Math.abs(c_y - t_y) === 1 &&
+        this.chessboard[c_x - 1][c_y].type === "none"
+      ) {
+        return true;
       }
       //落点在马的下方
-      if (t_x-c_x===2 && Math.abs(c_y-t_y)===1 && this.chessboard[c_x+1][c_y].type==="none") {
-        return true
+      if (
+        t_x - c_x === 2 &&
+        Math.abs(c_y - t_y) === 1 &&
+        this.chessboard[c_x + 1][c_y].type === "none"
+      ) {
+        return true;
       }
       //落点在马的左方
-      if (c_y-t_y===2 && Math.abs(c_x-t_x)===1 && this.chessboard[c_x][c_y-1].type==="none") {
-        return true
+      if (
+        c_y - t_y === 2 &&
+        Math.abs(c_x - t_x) === 1 &&
+        this.chessboard[c_x][c_y - 1].type === "none"
+      ) {
+        return true;
       }
       //落点在马的右方
-      if (c_y-t_y===-2 && Math.abs(c_x-t_x)===1 && this.chessboard[c_x][c_y+1].type==="none") {
-        return true
+      if (
+        c_y - t_y === -2 &&
+        Math.abs(c_x - t_x) === 1 &&
+        this.chessboard[c_x][c_y + 1].type === "none"
+      ) {
+        return true;
       }
-      return false
+      return false;
     },
     // 判断象的落点是否合法
     canMoveOfXiang(c_x, c_y, t_x, t_y) {
       //落点在象的左上方
-      if (c_x-t_x===2 && c_y-t_y===2 && this.chessboard[c_x-1][c_y-1].type==="none") {
-        return true
+      if (
+        c_x - t_x === 2 &&
+        c_y - t_y === 2 &&
+        this.chessboard[c_x - 1][c_y - 1].type === "none"
+      ) {
+        return true;
       }
       //落点在象的右上方
-      if (c_x-t_x===2 && c_y-t_y===-2 && this.chessboard[c_x-1][c_y+1].type==="none") {
-        return true
+      if (
+        c_x - t_x === 2 &&
+        c_y - t_y === -2 &&
+        this.chessboard[c_x - 1][c_y + 1].type === "none"
+      ) {
+        return true;
       }
       //落点在象的左下方
-      if (c_x-t_x===-2 && c_y-t_y===2 && this.chessboard[c_x+1][c_y-1].type==="none") {
-        return true
+      if (
+        c_x - t_x === -2 &&
+        c_y - t_y === 2 &&
+        this.chessboard[c_x + 1][c_y - 1].type === "none"
+      ) {
+        return true;
       }
       //落点在象的右下方
-      if (c_x-t_x===-2 && c_y-t_y===-2 && this.chessboard[c_x+1][c_y+1].type==="none") {
-        return true
+      if (
+        c_x - t_x === -2 &&
+        c_y - t_y === -2 &&
+        this.chessboard[c_x + 1][c_y + 1].type === "none"
+      ) {
+        return true;
       }
-      return false
+      return false;
     },
     // 判断炮的落点是否合法
-    canMoveOfPao(c_x, c_y, t_x, t_y,targetPoint) {
-      let temp = this.hasManyPoint(c_x, c_y, t_x, t_y)
-      if (temp===1) {
-        if (targetPoint.type === 'none') {
-          return false
+    canMoveOfPao(c_x, c_y, t_x, t_y, targetPoint) {
+      let { count } = this.hasManyPoint(c_x, c_y, t_x, t_y);
+      if (count === 1) {
+        if (targetPoint.type === "none") {
+          return false;
         }
-        return true
-      }else if(temp === 0){
-         if (targetPoint.type === 'none') {
-          return true
+        return true;
+      } else if (count === 0) {
+        if (targetPoint.type === "none") {
+          return true;
         }
       }
-      return false
+      return false;
     },
-    hasManyPoint(c_x, c_y, t_x, t_y){
+    hasManyPoint(c_x, c_y, t_x, t_y) {
+      let resp = { count: -1 };
       if (c_x !== t_x && c_y !== t_y) {
-        return -1;
+        return resp;
       }
       // eslint-disable-next-line no-debugger
-      let count = 0
-      let x,y
-      let dValueX = c_x-t_x,dValueY=c_y-t_y
+      resp.count = 0;
+      let x, y;
+      let dValueX = c_x - t_x,
+        dValueY = c_y - t_y;
       if (dValueX >= 0) {
-        x = t_x
-      }else{
-        x = c_x
+        x = t_x;
+      } else {
+        x = c_x;
       }
       if (dValueY >= 0) {
-        y = t_y
-      }else{
-        y = c_y
+        y = t_y;
+      } else {
+        y = c_y;
       }
-      if (dValueX===0) {
-        for (let i = y+1; i < Math.abs(dValueY)+y; i++) {
+      if (dValueX === 0) {
+        for (let i = y + 1; i < Math.abs(dValueY) + y; i++) {
           const element = this.chessboard[x][i];
-          if (element.type !== 'none') {
-            count++
+          if (element.type !== "none") {
+            resp.count++;
           }
         }
+        resp.axis = "y";
+        resp.distance = dValueY;
       }
-      if (dValueY===0) {
-        for (let i = x+1; i < Math.abs(dValueX)+x; i++) {
+      if (dValueY === 0) {
+        for (let i = x + 1; i < Math.abs(dValueX) + x; i++) {
           const element = this.chessboard[i][y];
-          if (element.type !== 'none') {
-            count++
+          if (element.type !== "none") {
+            resp.count++;
           }
         }
+        resp.axis = "x";
+        resp.distance = dValueX;
       }
-      return count
+      return resp;
     },
     moveChessman(currentPoint, targetPoint) {
       let x = currentPoint.position[0],
