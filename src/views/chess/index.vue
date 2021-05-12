@@ -88,11 +88,11 @@ export default {
     },
     selectOrMove(event, point) {
       console.log(event, point);
-      point = JSON.parse(JSON.stringify(point))
+      point = JSON.parse(JSON.stringify(point));
       // select event
       if (this.currentSelectChessman) {
-        this.moveChessman(point);
-      }else{
+        this.moveChessmanBefore(point);
+      } else {
         this.selectChessman(point);
       }
     },
@@ -102,7 +102,7 @@ export default {
       }
       this.currentSelectChessman = point;
     },
-    moveChessman(targetPoint) {
+    moveChessmanBefore(targetPoint) {
       // 若落点与选中点都是同一方的棋子，切换选中的棋子
       if (targetPoint.type == this.currentSelectChessman.type) {
         // 若落点与选中点一样就什么都不做
@@ -111,13 +111,27 @@ export default {
         return;
       } else {
         //判断该点是否能落子
-        let x=this.currentSelectChessman.position[0],y=this.currentSelectChessman.position[1]
-        this.chessboard[x][y].name =''
-        this.chessboard[x][y].type ='none'
-        this.chessboard[targetPoint.position[0]][targetPoint.position[1]].name =this.currentSelectChessman.name
-        this.chessboard[targetPoint.position[0]][targetPoint.position[1]].type =this.currentSelectChessman.type
-        this.currentSelectChessman = null
+        if (this.checkCanMove(this.currentSelectChessman,targetPoint)) {
+            this.moveChessman(this.currentSelectChessman,targetPoint)
+        }else{
+            return
+        }
       }
+    },
+    checkCanMove(currentPoint,targetPoint) {
+        console.log(currentPoint,targetPoint);
+        return true
+    },
+    moveChessman(currentPoint,targetPoint) {
+      let x = currentPoint.position[0],
+        y = currentPoint.position[1];
+      this.chessboard[x][y].name = "";
+      this.chessboard[x][y].type = "none";
+      let targetX = targetPoint.position[0],
+        targetY = targetPoint.position[1];
+      this.chessboard[targetX][targetY].name = currentPoint.name;
+      this.chessboard[targetX][targetY].type = currentPoint.type;
+      this.currentSelectChessman = null;
     },
     createChessman(name, type) {
       console.log(name, type);
