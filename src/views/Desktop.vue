@@ -93,6 +93,12 @@ export default {
           hasLaunched: false,
           componentName: "AboutMe",
         },
+        {
+          name: "象棋",
+          hasMultiple: false,
+          hasLaunched: false,
+          componentName: "Chess",
+        },
       ],
       windows: [],
       zIndex: 9527,
