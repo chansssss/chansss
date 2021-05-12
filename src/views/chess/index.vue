@@ -1,12 +1,17 @@
+/* eslint-disable no-debugger */
 <template>
   <Win98Dialog @eventCallBack="eventCallBack" :zIndex="window.zIndex">
     <div class="game-container">
       <div class="left">
         <div class="chessboard">
           <template v-for="(row, rindex) in chessboard" :key="rindex">
-            <template v-for="(col, cindex) in row" :key="cindex">
-              <div class="point" @click="selectOrMove($event, col)">
-                <span>{{ col.name }}</span>
+            <template v-for="(point, cindex) in row" :key="cindex">
+              <div
+                class="point"
+                @click="selectOrMove($event, point)"
+                :class="point.type"
+              >
+                <span>{{ point.name }}</span>
               </div>
             </template>
             <div class="tchou" v-if="rindex == 4">
@@ -33,7 +38,6 @@ export default {
   created() {
     this.initChessboard();
     this.initChessman();
-    console.log(this.chessboard);
   },
   data() {
     return {
@@ -87,7 +91,6 @@ export default {
       }
     },
     selectOrMove(event, point) {
-      console.log(event, point);
       point = JSON.parse(JSON.stringify(point));
       // select event
       if (this.currentSelectChessman) {
@@ -111,18 +114,128 @@ export default {
         return;
       } else {
         //判断该点是否能落子
-        if (this.checkCanMove(this.currentSelectChessman,targetPoint)) {
-            this.moveChessman(this.currentSelectChessman,targetPoint)
-        }else{
-            return
+        if (this.checkCanMove(this.currentSelectChessman, targetPoint)) {
+          this.moveChessman(this.currentSelectChessman, targetPoint);
+        } else {
+          return;
         }
       }
     },
-    checkCanMove(currentPoint,targetPoint) {
-        console.log(currentPoint,targetPoint);
-        return true
+    checkCanMove(currentPoint, targetPoint) {
+      let c_x = currentPoint.position[0],
+        c_y = currentPoint.position[1];
+      let t_x = targetPoint.position[0],
+        t_y = targetPoint.position[1];
+      if (currentPoint.name === "车") {
+        return this.canMoveOfChe(c_x, c_y, t_x, t_y);
+      }
+      if (currentPoint.name === "炮") {
+        return this.canMoveOfPao(c_x, c_y, t_x, t_y,targetPoint);
+      }
+      if (currentPoint.name === "马") {
+        return this.canMoveOfMa(c_x, c_y, t_x, t_y);
+      }
+      if (currentPoint.name === "象") {
+        return this.canMoveOfXiang(c_x, c_y, t_x, t_y);
+      }
+      return true;
     },
-    moveChessman(currentPoint,targetPoint) {
+    // 判断车的落点是否合法
+    canMoveOfChe(c_x, c_y, t_x, t_y) {
+      return this.hasManyPoint(c_x, c_y, t_x, t_y)===0
+    },
+    // 判断马的落点是否合法
+    canMoveOfMa(c_x, c_y, t_x, t_y) {
+      //落点在马的上方
+      if (c_x-t_x===2 && Math.abs(c_y-t_y)===1 && this.chessboard[c_x-1][c_y].type==="none") {
+        return true
+      }
+      //落点在马的下方
+      if (t_x-c_x===2 && Math.abs(c_y-t_y)===1 && this.chessboard[c_x+1][c_y].type==="none") {
+        return true
+      }
+      //落点在马的左方
+      if (c_y-t_y===2 && Math.abs(c_x-t_x)===1 && this.chessboard[c_x][c_y-1].type==="none") {
+        return true
+      }
+      //落点在马的右方
+      if (c_y-t_y===-2 && Math.abs(c_x-t_x)===1 && this.chessboard[c_x][c_y+1].type==="none") {
+        return true
+      }
+      return false
+    },
+    // 判断象的落点是否合法
+    canMoveOfXiang(c_x, c_y, t_x, t_y) {
+      //落点在象的左上方
+      if (c_x-t_x===2 && c_y-t_y===2 && this.chessboard[c_x-1][c_y-1].type==="none") {
+        return true
+      }
+      //落点在象的右上方
+      if (c_x-t_x===2 && c_y-t_y===-2 && this.chessboard[c_x-1][c_y+1].type==="none") {
+        return true
+      }
+      //落点在象的左下方
+      if (c_x-t_x===-2 && c_y-t_y===2 && this.chessboard[c_x+1][c_y-1].type==="none") {
+        return true
+      }
+      //落点在象的右下方
+      if (c_x-t_x===-2 && c_y-t_y===-2 && this.chessboard[c_x+1][c_y+1].type==="none") {
+        return true
+      }
+      return false
+    },
+    // 判断炮的落点是否合法
+    canMoveOfPao(c_x, c_y, t_x, t_y,targetPoint) {
+      let temp = this.hasManyPoint(c_x, c_y, t_x, t_y)
+      if (temp===1) {
+        if (targetPoint.type === 'none') {
+          return false
+        }
+        return true
+      }else if(temp === 0){
+         if (targetPoint.type === 'none') {
+          return true
+        }
+      }
+      return false
+    },
+    hasManyPoint(c_x, c_y, t_x, t_y){
+      if (c_x !== t_x && c_y !== t_y) {
+        return -1;
+      }
+      // eslint-disable-next-line no-debugger
+      let count = 0
+      let x,y
+      let dValueX = c_x-t_x,dValueY=c_y-t_y
+      if (dValueX >= 0) {
+        x = t_x
+      }else{
+        x = c_x
+      }
+      if (dValueY >= 0) {
+        y = t_y
+      }else{
+        y = c_y
+      }
+      if (dValueX===0) {
+        for (let i = y+1; i < Math.abs(dValueY)+y; i++) {
+          const element = this.chessboard[x][i];
+          if (element.type !== 'none') {
+            count++
+          }
+        }
+      }
+      if (dValueY===0) {
+        for (let i = x+1; i < Math.abs(dValueX)+x; i++) {
+          const element = this.chessboard[i][y];
+          if (element.type !== 'none') {
+            count++
+          }
+        }
+      }
+      return count
+    },
+    moveChessman(currentPoint, targetPoint) {
       let x = currentPoint.position[0],
         y = currentPoint.position[1];
       this.chessboard[x][y].name = "";
@@ -182,5 +295,12 @@ export default {
   .right {
     flex: 1;
   }
+}
+
+.red {
+  color: red;
+}
+.black {
+  color: black;
 }
 </style>

@@ -33,7 +33,7 @@
     </div>
     <div class="footer">
       <div class="startmenu">
-        <StartMenu></StartMenu>
+        <!-- <StartMenu></StartMenu> -->
         <button class="win98-button btn-startmenu">Start</button>
       </div>
       <div class="taskbar">

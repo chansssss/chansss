@@ -72,6 +72,18 @@ export default {
               divider: true,
             },
           ],
+        },{
+          title: "关于我",
+          divider: false,
+          hasChildren: false
+        },{
+          title: "关于我",
+          divider: false,
+          hasChildren: false,
+        },{
+          title: "关于我",
+          divider: true,
+          hasChildren: false,
         },
       ],
     };
@@ -110,7 +122,7 @@ export default {
           display: inline-block;
         }
       }
-      height: 40px;
+      height: 36px;
       line-height: 40px;
       display: flex;
       font-family: system;
@@ -123,7 +135,7 @@ export default {
       justify-content: space-between;
       .item-icon {
         width: 30px;
-        padding: 7px 0 0 7px;
+        padding: 5px 0 0 7px;
       }
       .item-title {
         text-align: left;
