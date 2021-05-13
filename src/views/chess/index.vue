@@ -44,6 +44,10 @@ export default {
       chessboard: [],
       currentKing: "red",
       currentSelectChessman: null,
+      kingsPoint: {
+        red: { type: "red", name: "帅", position: [0, 4] },
+        black: { type: "black", name: "帅", position: [8, 4] },
+      },
     };
   },
   methods: {
@@ -116,6 +120,7 @@ export default {
         //判断该点是否能落子
         if (this.checkCanMove(this.currentSelectChessman, targetPoint)) {
           this.moveChessman(this.currentSelectChessman, targetPoint);
+          console.log("----" + this.isDanger("red"));
         } else {
           return;
         }
@@ -143,10 +148,10 @@ export default {
         return this.canMoveOfZu(c_x, c_y, t_x, t_y, currentPoint.type);
       }
       if (currentPoint.name === "仕") {
-        return this.canMoveOfShi(c_x, c_y, t_x, t_y,currentPoint);
+        return this.canMoveOfShi(c_x, c_y, t_x, t_y, currentPoint);
       }
       if (currentPoint.name === "帅") {
-        return this.canMoveOfShuai(c_x, c_y, t_x, t_y,currentPoint);
+        return this.canMoveOfShuai(c_x, c_y, t_x, t_y, currentPoint);
       }
       return true;
     },
@@ -175,7 +180,6 @@ export default {
     // 判断车的落点是否合法
     canMoveOfChe(c_x, c_y, t_x, t_y) {
       let { count, axis } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
-      console.log(count, axis);
       if (axis === "xaxis" || axis === "yaxis") {
         if (count === 0) {
           return true;
@@ -222,14 +226,12 @@ export default {
     // 判断象的落点是否合法
     canMoveOfXiang(c_x, c_y, t_x, t_y) {
       let { count, axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
-      console.log(count, axis, distance);
       if (axis === "oblique" && distance === 2 && count === 0) return true;
       return false;
     },
     // 判断仕的落点是否合法
     canMoveOfShi(c_x, c_y, t_x, t_y, currentPoint) {
       let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
-      console.log(axis, distance,t_x, t_y,currentPoint.type);
       if (axis === "oblique" && distance === 1) {
         if (currentPoint.type === "black" && t_x >= 7 && t_y >= 3 && t_y <= 5)
           return true;
@@ -241,8 +243,7 @@ export default {
     // 判断帅的落点是否合法
     canMoveOfShuai(c_x, c_y, t_x, t_y, currentPoint) {
       let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
-      console.log(axis, distance,t_x, t_y,currentPoint.type);
-      if (axis === "xaxis" || axis === "yaxis" && distance === 1) {
+      if (axis === "xaxis" || (axis === "yaxis" && distance === 1)) {
         if (currentPoint.type === "black" && t_x >= 7 && t_y >= 3 && t_y <= 5)
           return true;
         if (currentPoint.type === "red" && t_x <= 2 && t_y >= 3 && t_y <= 5)
@@ -328,6 +329,12 @@ export default {
       this.chessboard[targetX][targetY].name = currentPoint.name;
       this.chessboard[targetX][targetY].type = currentPoint.type;
       this.currentSelectChessman = null;
+      //更新帅的点
+      if (currentPoint.name === "帅") {
+        this.kingsPoint[currentPoint.type] = JSON.stringify(
+          JSON.parse(this.chessboard[targetX][targetY])
+        );
+      }
     },
     createChessman(name, type) {
       console.log(name, type);
@@ -338,6 +345,21 @@ export default {
         event: event,
         eventName: eventName,
       });
+    },
+    isDanger(type) {
+      for (let i = 0; i < this.chessboard.length; i++) {
+        for (let j = 0; j < this.chessboard[i].length; j++) {
+          let point = this.chessboard[i][j];
+          if (
+            point.name !== "帅" &&
+            point.type !== type &&
+            point.type !== "none" &&
+            this.checkCanMove(point, this.kingsPoint[type])
+          )
+            return true;
+        }
+      }
+      return false;
     },
   },
 };
