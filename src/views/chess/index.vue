@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 <template>
   <Win98Dialog @eventCallBack="eventCallBack" :zIndex="window.zIndex">
     <div class="game-container">
@@ -62,6 +61,7 @@ export default {
     };
   },
   methods: {
+    //初始化棋盘上的点
     initChessboard() {
       let row = 10,
         col = 9;
@@ -76,6 +76,7 @@ export default {
         this.chessboard.push(temp);
       }
     },
+    //初始化棋子
     initChessman() {
       let arr = [
         ["车", "马", "象", "仕", "帅", "仕", "象", "马", "车"],
@@ -105,6 +106,7 @@ export default {
         }
       }
     },
+    //用户点击棋子事件，可能是落点，可能是选中棋子
     selectOrMove(event, point) {
       point = JSON.parse(JSON.stringify(point));
       // select event
@@ -114,6 +116,7 @@ export default {
         this.selectChessman(point);
       }
     },
+    //选中棋子事件
     selectChessman(point) {
       if (point.type === "none") {
         return;
@@ -139,6 +142,7 @@ export default {
         }
       }
     },
+    // 检查棋子落点合法性
     checkCanMove(currentPoint, targetPoint) {
       let c_x = currentPoint.position[0],
         c_y = currentPoint.position[1];
@@ -168,11 +172,13 @@ export default {
       }
       return true;
     },
+    // 棋子过河了吗
     isCrossRiver(type, t_x) {
       if (type === "red" && t_x >= 5) return true;
       if (type === "black" && t_x < 5) return true;
       return false;
     },
+    // 判断卒的落点是否合法
     canMoveOfZu(c_x, c_y, t_x, t_y, currentType) {
       let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
       if (this.isCrossRiver(currentType, t_x)) {
@@ -285,8 +291,6 @@ export default {
     //获取两点连线的方向，距离，两点之间的有效棋子
     computerTwoPoint(c_x, c_y, t_x, t_y) {
       let resp = { count: 0 };
-      // eslint-disable-next-line no-debugger
-      resp.count = 0;
       let x, y;
       let dValueX = c_x - t_x,
         dValueY = c_y - t_y;
@@ -332,6 +336,7 @@ export default {
       }
       return resp;
     },
+    // 移动棋子
     moveChessman(currentPoint, targetPoint) {
       let x = currentPoint.position[0],
         y = currentPoint.position[1];
@@ -348,10 +353,8 @@ export default {
           JSON.parse(this.chessboard[targetX][targetY])
         );
       }
+      //更新当前该谁落子
       this.currentRound = this.currentRound === "red" ? "black" : "red";
-    },
-    createChessman(name, type) {
-      console.log(name, type);
     },
     eventCallBack({ event, eventName }) {
       this.$emit("windowEventCallBack", {
@@ -360,6 +363,7 @@ export default {
         eventName: eventName,
       });
     },
+    // 判断是否被将军
     isDanger(type) {
       for (let i = 0; i < this.chessboard.length; i++) {
         for (let j = 0; j < this.chessboard[i].length; j++) {
@@ -432,9 +436,6 @@ export default {
       .tchou {
         width: 100%;
         height: 92px;
-        span {
-          word-spacing: 2em;
-        }
       }
     }
   }
