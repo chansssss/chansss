@@ -8,11 +8,11 @@
               <div
                 class="point"
                 @click="selectOrMove($event, point)"
-                :class="point.type"
+                :class="point.color"
               >
                 <div
                   class="selected"
-                  :class="point.type"
+                  :class="point.color"
                   v-if="
                     currentSelectChessman &&
                     currentSelectChessman.position[0] === rindex &&
@@ -52,11 +52,15 @@ export default {
   data() {
     return {
       chessboard: [],
-      currentRound: "red",
+      currentRound: "bottom",
       currentSelectChessman: null,
+      colorMapper:{
+        top:'black',
+        bottom:'red'
+      },
       kingsPoint: {
-        red: { type: "red", name: "帅", position: [0, 4] },
-        black: { type: "black", name: "帅", position: [8, 4] },
+        top: { type: "top", name: "帅", position: [0, 4] },
+        bottom: { type: "bottom", name: "帅", position: [8, 4] },
       },
     };
   },
@@ -90,17 +94,19 @@ export default {
         ["", "", "", "", "", "", "", "", ""],
         ["车", "马", "象", "仕", "帅", "仕", "象", "马", "车"],
       ];
-      let type = "red";
+      let type = "top";
       for (let i = 0; i < this.chessboard.length; i++) {
         if (i === 5) {
-          type = "black";
+          type = "bottom";
         }
         for (let j = 0; j < this.chessboard[i].length; j++) {
           let chessman = this.chessboard[i][j];
           if (arr[i][j]) {
             chessman.type = type;
+            chessman.color = this.colorMapper[type]
           } else {
             chessman.type = "none";
+            chessman.color = ''
           }
           chessman.name = arr[i][j];
         }
@@ -136,7 +142,7 @@ export default {
         //判断该点是否能落子
         if (this.checkCanMove(this.currentSelectChessman, targetPoint)) {
           this.moveChessman(this.currentSelectChessman, targetPoint);
-          console.log("----" + this.isDanger("red"));
+          console.log("----" + this.isDanger("top"));
         } else {
           return;
         }
@@ -174,8 +180,8 @@ export default {
     },
     // 棋子过河了吗
     isCrossRiver(type, t_x) {
-      if (type === "red" && t_x >= 5) return true;
-      if (type === "black" && t_x < 5) return true;
+      if (type === "top" && t_x >= 5) return true;
+      if (type === "bottom" && t_x < 5) return true;
       return false;
     },
     // 判断卒的落点是否合法
@@ -186,7 +192,7 @@ export default {
           return true;
         }
       }
-      if (currentType === "red") {
+      if (currentType === "top") {
         if (axis === "xaxis" && distance < 0 && Math.abs(distance) === 1) {
           return true;
         }
@@ -252,9 +258,9 @@ export default {
     canMoveOfShi(c_x, c_y, t_x, t_y, currentPoint) {
       let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
       if (axis === "oblique" && distance === 1) {
-        if (currentPoint.type === "black" && t_x >= 7 && t_y >= 3 && t_y <= 5)
+        if (currentPoint.type === "bottom" && t_x >= 7 && t_y >= 3 && t_y <= 5)
           return true;
-        if (currentPoint.type === "red" && t_x <= 2 && t_y >= 3 && t_y <= 5)
+        if (currentPoint.type === "top" && t_x <= 2 && t_y >= 3 && t_y <= 5)
           return true;
       }
       return false;
@@ -263,9 +269,9 @@ export default {
     canMoveOfShuai(c_x, c_y, t_x, t_y, currentPoint) {
       let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
       if (axis === "xaxis" || (axis === "yaxis" && distance === 1)) {
-        if (currentPoint.type === "black" && t_x >= 7 && t_y >= 3 && t_y <= 5)
+        if (currentPoint.type === "bottom" && t_x >= 7 && t_y >= 3 && t_y <= 5)
           return true;
-        if (currentPoint.type === "red" && t_x <= 2 && t_y >= 3 && t_y <= 5)
+        if (currentPoint.type === "top" && t_x <= 2 && t_y >= 3 && t_y <= 5)
           return true;
       }
       return false;
@@ -342,10 +348,14 @@ export default {
         y = currentPoint.position[1];
       this.chessboard[x][y].name = "";
       this.chessboard[x][y].type = "none";
+      this.chessboard[x][y].color = "";
+
       let targetX = targetPoint.position[0],
         targetY = targetPoint.position[1];
       this.chessboard[targetX][targetY].name = currentPoint.name;
       this.chessboard[targetX][targetY].type = currentPoint.type;
+      this.chessboard[targetX][targetY].color = this.colorMapper[currentPoint.type];
+
       this.currentSelectChessman = null;
       //更新 帅 的点
       if (currentPoint.name === "帅") {
@@ -354,7 +364,7 @@ export default {
         );
       }
       //更新当前该谁落子
-      this.currentRound = this.currentRound === "red" ? "black" : "red";
+      this.currentRound = this.currentRound === "top" ? "bottom" : "top";
     },
     eventCallBack({ event, eventName }) {
       this.$emit("windowEventCallBack", {
