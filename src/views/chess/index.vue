@@ -140,7 +140,13 @@ export default {
         return this.canMoveOfXiang(c_x, c_y, t_x, t_y);
       }
       if (currentPoint.name === "卒") {
-        return this.canMoveOfZu(c_x, c_y, t_x, t_y,currentPoint.type);
+        return this.canMoveOfZu(c_x, c_y, t_x, t_y, currentPoint.type);
+      }
+      if (currentPoint.name === "仕") {
+        return this.canMoveOfShi(c_x, c_y, t_x, t_y,currentPoint);
+      }
+      if (currentPoint.name === "帅") {
+        return this.canMoveOfShuai(c_x, c_y, t_x, t_y,currentPoint);
       }
       return true;
     },
@@ -150,26 +156,32 @@ export default {
       return false;
     },
     canMoveOfZu(c_x, c_y, t_x, t_y, currentType) {
-      let { count, axis, distance } = this.hasManyPoint(c_x, c_y, t_x, t_y);
-      console.log(count);
+      let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
       if (this.isCrossRiver(currentType, t_x)) {
-        if (axis === "y" && Math.abs(distance) === 1) {
+        if (axis === "yaxis" && Math.abs(distance) === 1) {
           return true;
         }
       }
       if (currentType === "red") {
-        if (axis === "x" && distance < 0 && Math.abs(distance) === 1) {
+        if (axis === "xaxis" && distance < 0 && Math.abs(distance) === 1) {
           return true;
         }
       } else {
-        if (axis === "x" && distance > 0 && Math.abs(distance) === 1) {
+        if (axis === "xaxis" && distance > 0 && Math.abs(distance) === 1) {
           return true;
         }
       }
     },
     // 判断车的落点是否合法
     canMoveOfChe(c_x, c_y, t_x, t_y) {
-      return this.hasManyPoint(c_x, c_y, t_x, t_y).count === 0;
+      let { count, axis } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
+      console.log(count, axis);
+      if (axis === "xaxis" || axis === "yaxis") {
+        if (count === 0) {
+          return true;
+        }
+      }
+      return false;
     },
     // 判断马的落点是否合法
     canMoveOfMa(c_x, c_y, t_x, t_y) {
@@ -209,60 +221,56 @@ export default {
     },
     // 判断象的落点是否合法
     canMoveOfXiang(c_x, c_y, t_x, t_y) {
-      //落点在象的左上方
-      if (
-        c_x - t_x === 2 &&
-        c_y - t_y === 2 &&
-        this.chessboard[c_x - 1][c_y - 1].type === "none"
-      ) {
-        return true;
+      let { count, axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
+      console.log(count, axis, distance);
+      if (axis === "oblique" && distance === 2 && count === 0) return true;
+      return false;
+    },
+    // 判断仕的落点是否合法
+    canMoveOfShi(c_x, c_y, t_x, t_y, currentPoint) {
+      let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
+      console.log(axis, distance,t_x, t_y,currentPoint.type);
+      if (axis === "oblique" && distance === 1) {
+        if (currentPoint.type === "black" && t_x >= 7 && t_y >= 3 && t_y <= 5)
+          return true;
+        if (currentPoint.type === "red" && t_x <= 2 && t_y >= 3 && t_y <= 5)
+          return true;
       }
-      //落点在象的右上方
-      if (
-        c_x - t_x === 2 &&
-        c_y - t_y === -2 &&
-        this.chessboard[c_x - 1][c_y + 1].type === "none"
-      ) {
-        return true;
-      }
-      //落点在象的左下方
-      if (
-        c_x - t_x === -2 &&
-        c_y - t_y === 2 &&
-        this.chessboard[c_x + 1][c_y - 1].type === "none"
-      ) {
-        return true;
-      }
-      //落点在象的右下方
-      if (
-        c_x - t_x === -2 &&
-        c_y - t_y === -2 &&
-        this.chessboard[c_x + 1][c_y + 1].type === "none"
-      ) {
-        return true;
+      return false;
+    },
+    // 判断帅的落点是否合法
+    canMoveOfShuai(c_x, c_y, t_x, t_y, currentPoint) {
+      let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
+      console.log(axis, distance,t_x, t_y,currentPoint.type);
+      if (axis === "xaxis" || axis === "yaxis" && distance === 1) {
+        if (currentPoint.type === "black" && t_x >= 7 && t_y >= 3 && t_y <= 5)
+          return true;
+        if (currentPoint.type === "red" && t_x <= 2 && t_y >= 3 && t_y <= 5)
+          return true;
       }
       return false;
     },
     // 判断炮的落点是否合法
     canMoveOfPao(c_x, c_y, t_x, t_y, targetPoint) {
-      let { count } = this.hasManyPoint(c_x, c_y, t_x, t_y);
-      if (count === 1) {
-        if (targetPoint.type === "none") {
-          return false;
-        }
-        return true;
-      } else if (count === 0) {
-        if (targetPoint.type === "none") {
+      let { count, axis } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
+      if (axis === "xaxis" || axis === "yaxis") {
+        if (count === 1) {
+          if (targetPoint.type === "none") {
+            return false;
+          }
           return true;
+        } else if (count === 0) {
+          if (targetPoint.type === "none") {
+            return true;
+          }
         }
       }
+
       return false;
     },
-    hasManyPoint(c_x, c_y, t_x, t_y) {
-      let resp = { count: -1 };
-      if (c_x !== t_x && c_y !== t_y) {
-        return resp;
-      }
+    //获取两点连线的方向，距离，两点之间的有效棋子
+    computerTwoPoint(c_x, c_y, t_x, t_y) {
+      let resp = { count: 0 };
       // eslint-disable-next-line no-debugger
       resp.count = 0;
       let x, y;
@@ -285,8 +293,8 @@ export default {
             resp.count++;
           }
         }
-        resp.axis = "y";
-        resp.distance = dValueY;
+        resp.axis = "yaxis";
+        resp.distance = Math.abs(dValueY);
       }
       if (dValueY === 0) {
         for (let i = x + 1; i < Math.abs(dValueX) + x; i++) {
@@ -295,8 +303,18 @@ export default {
             resp.count++;
           }
         }
-        resp.axis = "x";
-        resp.distance = dValueX;
+        resp.axis = "xaxis";
+        resp.distance = Math.abs(dValueX);
+      }
+      if (Math.abs(dValueX) === Math.abs(dValueY)) {
+        resp.distance = Math.abs(dValueX);
+        for (let i = 1; i <= resp.distance; i++) {
+          const element = this.chessboard[x + i][y + i];
+          if (element.type !== "none") {
+            resp.count++;
+          }
+        }
+        resp.axis = "oblique";
       }
       return resp;
     },
