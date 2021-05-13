@@ -11,11 +11,22 @@
                 @click="selectOrMove($event, point)"
                 :class="point.type"
               >
-                <span>{{ point.name }}</span>
+                <div
+                  class="selected"
+                  :class="point.type"
+                  v-if="
+                    currentSelectChessman &&
+                    currentSelectChessman.position[0] === rindex &&
+                    currentSelectChessman.position[1] === cindex
+                  "
+                ></div>
+                <div class="chessman" v-if="point.type !== 'none'">
+                  <span>{{ point.name }}</span>
+                </div>
               </div>
             </template>
             <div class="tchou" v-if="rindex == 4">
-              <span>楚河汉界</span>
+              <!-- <span>楚河汉界</span> -->
             </div>
           </template>
         </div>
@@ -42,7 +53,7 @@ export default {
   data() {
     return {
       chessboard: [],
-      currentKing: "red",
+      currentRound: "red",
       currentSelectChessman: null,
       kingsPoint: {
         red: { type: "red", name: "帅", position: [0, 4] },
@@ -107,7 +118,9 @@ export default {
       if (point.type === "none") {
         return;
       }
-      this.currentSelectChessman = point;
+      if (this.currentRound === point.type) {
+        this.currentSelectChessman = point;
+      }
     },
     moveChessmanBefore(targetPoint) {
       // 若落点与选中点都是同一方的棋子，切换选中的棋子
@@ -329,12 +342,13 @@ export default {
       this.chessboard[targetX][targetY].name = currentPoint.name;
       this.chessboard[targetX][targetY].type = currentPoint.type;
       this.currentSelectChessman = null;
-      //更新帅的点
+      //更新 帅 的点
       if (currentPoint.name === "帅") {
         this.kingsPoint[currentPoint.type] = JSON.stringify(
           JSON.parse(this.chessboard[targetX][targetY])
         );
       }
+      this.currentRound = this.currentRound === "red" ? "black" : "red";
     },
     createChessman(name, type) {
       console.log(name, type);
@@ -366,31 +380,58 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@pointWidth: 20px;
-@pointHeight: 20px;
+@pointWidth: 36px;
+@pointHeight: 35px;
 @tchouHeight: 40px;
 
 .game-container {
   width: 550px;
-  height: 400px;
+  height: 500px;
   background-color: #fff;
   display: flex;
   .left {
-    width: 450px;
-    width: 400px;
     .chessboard {
+      padding: 20px 39px;
       display: flex;
       flex-wrap: wrap;
-      width: calc(9 * @pointWidth);
-      margin: 50px auto;
+      width: 408px;
+      height: 480px;
+      background-image: url(../../assets/imgs/bg.png);
+      background-size: 400px 480px;
+      margin: 20px auto;
       .point {
         width: @pointWidth;
         height: @pointHeight;
-        border: 1px solid gainsboro;
+        position: relative;
+        .selected {
+          position: absolute;
+          width: 34px;
+          height: 34px;
+          top: 1px;
+          left: 1px;
+        }
+        .selected.red{
+          border: 1px dotted red;
+        }
+        .selected.black{
+          border: 1px dotted black;
+        }
+        .chessman {
+          margin: 3px;
+          background-color: blanchedalmond;
+          display: block;
+          content: "";
+          width: 30px;
+          height: 30px;
+          line-height: 30px;
+          border: 1px solid black;
+          border-radius: 50%;
+        }
       }
+
       .tchou {
         width: 100%;
-        height: @tchouHeight;
+        height: 92px;
         span {
           word-spacing: 2em;
         }

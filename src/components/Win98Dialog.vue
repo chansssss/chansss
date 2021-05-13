@@ -242,7 +242,7 @@ export default {
 
 <style lang="less" scoped>
 .win98-dialog {
-  height: 400px;
+  height: 600px;
   width: 600px;
   top: 150px;
   left: 200px;
