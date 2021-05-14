@@ -197,6 +197,7 @@ export default {
       if (type === 'cornerResize') {
         this.commonMoveEvent(dom, e, this.cornerResizeEvent)
       }
+      this.$emit('eventCallBack', { event: e, eventName: 'resize' })
     },
     leftResizeEvent(data) {
       const ls = data.moveX + data.left

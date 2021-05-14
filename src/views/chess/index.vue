@@ -29,7 +29,7 @@
                 </div>
               </div>
             </template>
-            <div v-if="rindex == 4" :key="rindex+''+cindex" class="tchou">
+            <div v-if="rindex == 4" :key="rindex" class="tchou">
               <!-- <span>楚河汉界</span> -->
             </div>
           </template>

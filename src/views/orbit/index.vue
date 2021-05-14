@@ -59,6 +59,9 @@ export default {
   },
   methods: {
     eventCallBack({ event, eventName }) {
+      if (eventName === 'resize') {
+        this.$refs.earth.resize()
+      }
       this.$emit('windowEventCallBack', {
         uuid: this.window.uuid,
         event: event,
