@@ -7,8 +7,8 @@
           <span>ME</span>
         </div>
       </div>
-      <template v-for="(menu, index) in menus" :key="index">
-        <div class="menu-content--item">
+      <template v-for="(menu, index) in menus">
+        <div :key="index" class="menu-content--item">
           <div class="item-icon">
             <img
               class="icon"
@@ -18,12 +18,12 @@
               height="24"
               src="data:image/gif;base64,R0lGODlhGAAXAIQKAAAAAAYAfQYAfggAlQgAlhcA/4MAAIQAfP8AAAB7AICAgI6QAI+RANGOAAD+ALi4uLm5ucbITMfJSwD9+//HAP/Gh+Dgzvf5APf5fvf5f/j6f/j45vj45/n554CAgICAgCH5BAEKAB8ALAAAAAAYABcAAAXi4PcxZEkCYqquy5a9MMaga81IeK6bvNpunI1wCCQOJbRRB5apNDXO6LOCTDE2mKZOEtniukkGJ6Mom89oNOBKHlAIgQBBAK8HNgLOPbDeVBQEDQSDcnV2g4h9ZA+MjY6Pjn1/DxaVlpeYlQ8ALYsWRkFGRRabDB2Tn0IdohurQqR9GAqUQggGQgVGCa+lYwoQnwgXtxsTBblACQkdsFeoGwa2HBzHD0IJDrnNJLOfD8QHDwcHQcq7sB8AAN2s7egi7GZC8hvy7x/sRKGgG/fdmQAtbUoxC5LBR0kUqFvIsKHDEAA7"
               alt=""
-            />
+            >
           </div>
           <div class="item-title">
             <span>关于我</span>
           </div>
-          <div class="item-open--btn" v-if="menu.hasChildren">
+          <div v-if="menu.hasChildren" class="item-open--btn">
             <span>
               <img
                 class="black"
@@ -31,18 +31,18 @@
                 name="chevron-black-right"
                 src="data:image/gif;base64,R0lGODlhBAAHAIABAAAAAAQz/yH5BAEKAAEALAAAAAAEAAcAAAIIRA4WaeyrVCgAOw=="
                 alt=""
-              />
+              >
               <img
                 class="white"
                 size="custom"
                 name="chevron-white-right"
                 src="data:image/gif;base64,R0lGODlhBAAHAIABAP///wQz/yH5BAEKAAEALAAAAAAEAAcAAAIIRA4WaeyrVCgAOw=="
                 alt=""
-              />
+              >
             </span>
           </div>
         </div>
-        <div class="divider" v-if="menu.divider"></div>
+        <div v-if="menu.divider" :key="index" class="divider" />
       </template>
     </div>
   </div>
@@ -51,53 +51,53 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: "StartMenu",
+  name: 'StartMenu',
   props: {
     window: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
-  created() {},
   data() {
     return {
       menus: [
         {
-          title: "关于我",
+          title: '关于我',
           divider: true,
           hasChildren: true,
           children: [
             {
-              title: "关于我",
-              divider: true,
-            },
-          ],
-        },{
-          title: "关于我",
+              title: '关于我',
+              divider: true
+            }
+          ]
+        }, {
+          title: '关于我',
           divider: false,
           hasChildren: false
-        },{
-          title: "关于我",
+        }, {
+          title: '关于我',
           divider: false,
-          hasChildren: false,
-        },{
-          title: "关于我",
+          hasChildren: false
+        }, {
+          title: '关于我',
           divider: true,
-          hasChildren: false,
-        },
-      ],
-    };
+          hasChildren: false
+        }
+      ]
+    }
   },
+  created() {},
   methods: {
     eventCallBack({ event, eventName }) {
-      this.$emit("windowEventCallBack", {
+      this.$emit('windowEventCallBack', {
         uuid: this.window.uuid,
         event: event,
-        eventName: eventName,
-      });
-    },
-  },
-};
+        eventName: eventName
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

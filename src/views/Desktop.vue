@@ -3,9 +3,9 @@
     <div class="windowarea">
       <div class="application-container">
         <div
-          class="application-shortcut"
           v-for="(application, index) in applications"
           :key="index"
+          class="application-shortcut"
           @click="launchApplicationBefore($event, application)"
         >
           <div class="application-shortcut--icon">
@@ -17,18 +17,19 @@
               height="32"
               src="data:image/gif;base64,R0lGODlhIAAgAIQfAAAAABgYGCEhIQAxMQAxnDExnABjY1JSUlpaWgCAAGNjYwCAgACcnISEhJSUlJycnJyczjHOzq2tlM6c/7W1tcDAwJzO/zH/Y87Ozs7O/+fn1ufn5+/v7///9////wQz/yH5BAEKAB8ALAAAAAAgACAAAAX+4CeO42OeaJqSrPhoVSzPtNwAbentfM/9wF+locDlHp6fRsNZNpnOKLGY+zw6moF2y+3CpsYWMssoMxbnhUFtaHOGCurRQ44wCvh8Xv2Nh1ljA2YFFhmGhwR8cHJiHhuCenoEGYkGfYyAHRyQEJ2eEAQTAYpgVYF3Gj1LARmjlot/JKcFqTtLGAG5pH6mjpBLwBi4C2yXsSWakHm5zGq7mLJYA8TU1c5txqbSXdxb2UeaGxob5OXm5rCmMDXsM2AKRwoIB/T08/X4+QAKDwI5AAADChxIkJ+CAIDiKFzIsGGcB3EQynoC7JYwDBIySnDgwESDKQcBabiQwKIMjRJtBAjIJeAjSIklTFZAmVHFA5cKYX5wybOnT585S1CoSDEKUaIQQ5Z4AwBG0wpNJTR9MLWqhqQ6HzBl6pSDVA1SOVC9CuBNRFlOYwBQyxZqBapvAbyAmLVoxbsXMZyUQBeQzb9/lcpySJiwzhEhAAA7"
               alt=""
-            />
+            >
           </div>
           <div class="application-shortcut--name">{{ application.name }}</div>
         </div>
       </div>
-      <template v-for="(window, index) in windows" :key="index">
+      <template v-for="(window, index) in windows">
         <component
-          v-bind:is="window.componentName"
+          :is="window.componentName"
           v-show="!window.minimize"
+          :key="index"
           :window="window"
           @windowEventCallBack="windowEventCallBack"
-        ></component>
+        />
       </template>
     </div>
     <div class="footer">
@@ -37,8 +38,9 @@
         <button class="win98-button btn-startmenu">Start</button>
       </div>
       <div class="taskbar">
-        <template v-for="(window, index) in windows" :key="index">
+        <template v-for="(window, index) in windows">
           <button
+            :key="index"
             class="win98-button taskbar-item"
             :class="window.actived ? 'win98-button--active' : ''"
             @click="activeWindow(window.uuid)"
@@ -61,10 +63,10 @@
             height="16"
             src="data:image/gif;base64,R0lGODlhEAAQAOMDAAABAHd5dnh6d7e4ALe5tvf4A/b59vj697e4ALe4ALe4ALe4ALe4ALe4ALe4ALe4ACH5BAEKAAYALAAAAAAQABAAAARR0MhpAKCYjgBCxkMBEMQ3hUFAHJ7USuExHqx7xuJav8OxFjIA7QUrEIA5IdEQ+sk4uxRng7QMM5bYrPYBhLaepcSbuhrElcGI8BJ01WjsJRMBADs="
             alt=""
-          />
+          >
         </div>
         <div class="time">
-          <p>{{nowTime}}</p>
+          <p>{{ nowTime }}</p>
         </div>
       </div>
     </div>
@@ -75,151 +77,151 @@
 // @ is an alias to /src
 import dayjs from 'dayjs' // ES 2015
 
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid'
 export default {
-  name: "Desktop",
+  name: 'Desktop',
   data() {
     return {
       applications: [
         {
-          name: "我的电脑",
+          name: '我的电脑',
           hasMultiple: true,
           hasLaunched: false,
-          componentName: "MyComputer",
+          componentName: 'MyComputer'
         },
         {
-          name: "关于我",
+          name: '卫星跟踪',
           hasMultiple: false,
           hasLaunched: false,
-          componentName: "AboutMe",
+          componentName: 'Orbit'
         },
         {
-          name: "象棋",
+          name: '象棋',
           hasMultiple: false,
           hasLaunched: false,
-          componentName: "Chess",
-        },
+          componentName: 'Chess'
+        }
       ],
       windows: [],
       zIndex: 9527,
       applicationWaitMap: {},
-      nowTime: dayjs(new Date()).format("hh:mm A"),
+      nowTime: dayjs(new Date()).format('hh:mm A'),
       networkImg: require('@/assets/imgs/network.png')
-    };
+    }
   },
   methods: {
-    updateTime(){
+    updateTime() {
       setInterval(() => {
-        this.nowTime = dayjs(new Date()).format("hh:mm A")
-      }, 1000);
+        this.nowTime = dayjs(new Date()).format('hh:mm A')
+      }, 1000)
     },
     // 启动应用的前置操作
     launchApplicationBefore(event, application) {
       if (this.applicationWaitMap[application.componentName]) {
-        return;
+        return
       }
-      this.applicationWaitMap[application.componentName] = true;
-      let window = {
+      this.applicationWaitMap[application.componentName] = true
+      const window = {
         componentName: application.componentName,
         actived: true,
         name: application.name,
         minimize: false,
         zIndex: this.zIndex++,
-        uuid: uuidv4(),
-      };
+        uuid: uuidv4()
+      }
       if (application.hasLaunched) {
         if (application.hasMultiple) {
           application.hasLaunched = true
-          this.launchApplication(window);
+          this.launchApplication(window)
         } else {
-          let applicationWindows = this.getWindowByApplication(application);
+          const applicationWindows = this.getWindowByApplication(application)
           if (applicationWindows) {
-            this.activeWindow(applicationWindows[0].uuid);
-          }else{
+            this.activeWindow(applicationWindows[0].uuid)
+          } else {
             application.hasLaunched = false
-            this.launchApplication(window);
+            this.launchApplication(window)
           }
         }
       } else {
         application.hasLaunched = true
-        this.launchApplication(window);
+        this.launchApplication(window)
       }
     },
     // 根据应用获取打开的窗口
     getWindowByApplication(application) {
-      let applicationWindows = [];
+      const applicationWindows = []
       for (let i = 0; i < this.windows.length; i++) {
-        const element = this.windows[i];
+        const element = this.windows[i]
         if (application.componentName === element.componentName) {
-          applicationWindows.push(element);
+          applicationWindows.push(element)
         }
       }
-      return applicationWindows.length > 0 ? applicationWindows : null;
+      return applicationWindows.length > 0 ? applicationWindows : null
     },
     // 打开应用
     launchApplication(window) {
-      document.body.style.cursor = "wait";
+      document.body.style.cursor = 'wait'
       setTimeout(() => {
-        this.unactivedAllWindow();
-        this.windows.push(window);
-        this.applicationWaitMap[window.componentName] = false;
-        document.body.style.cursor = "default";
-      }, 300);
+        this.unactivedAllWindow()
+        this.windows.push(window)
+        this.applicationWaitMap[window.componentName] = false
+        document.body.style.cursor = 'default'
+      }, 300)
     },
     //
     unactivedAllWindow() {
       for (let i = 0; i < this.windows.length; i++) {
-        const element = this.windows[i];
-        element.actived = false;
+        const element = this.windows[i]
+        element.actived = false
       }
     },
     // 根据uuid激活应用窗口
     activeWindow(uuid) {
-      let window = this.getWindowByUUID(uuid);
+      const window = this.getWindowByUUID(uuid)
       if (window) {
-        this.unactivedAllWindow();
-        window.actived = true;
-        window.minimize = false;
-        window.zIndex = this.zIndex++;
+        this.unactivedAllWindow()
+        window.actived = true
+        window.minimize = false
+        window.zIndex = this.zIndex++
       }
     },
     // 应用窗口的事件回调
     windowEventCallBack({ uuid, eventName }) {
-      let window = this.getWindowByUUID(uuid);
+      const window = this.getWindowByUUID(uuid)
       if (window) {
-        if (eventName === "minimize") {
-          window.minimize = true;
-          window.actived = false;
+        if (eventName === 'minimize') {
+          window.minimize = true
+          window.actived = false
         }
-        if (eventName === "close") {
-          this.deleteWindowByUUID(uuid);
+        if (eventName === 'close') {
+          this.deleteWindowByUUID(uuid)
         }
-        if (eventName === "active") {
-          this.activeWindow(uuid);
+        if (eventName === 'active') {
+          this.activeWindow(uuid)
         }
       }
     },
     // 根据uuid获取应用窗口
     getWindowByUUID(uuid) {
-      let window = null;
+      let window = null
       for (let i = 0; i < this.windows.length; i++) {
-        const element = this.windows[i];
+        const element = this.windows[i]
         if (element.uuid === uuid) {
-          window = element;
-          window.index = i;
-          return window;
+          window = element
+          window.index = i
+          return window
         }
       }
-      return window;
+      return window
     },
     deleteWindowByUUID(uuid) {
-      let window = this.getWindowByUUID(uuid);
+      const window = this.getWindowByUUID(uuid)
       if (window) {
-        this.windows.splice(window.index, 1);
+        this.windows.splice(window.index, 1)
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

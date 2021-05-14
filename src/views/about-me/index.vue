@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog @eventCallBack="eventCallBack" :zIndex="window.zIndex">
+  <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
     <h1>关于我</h1>
   </Win98Dialog>
 </template>
@@ -7,28 +7,28 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: "AboutMe",
+  name: 'AboutMe',
   props: {
     window: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
+  },
+  data() {
+    return {}
   },
   created() {
   },
-  data() {
-    return {};
-  },
   methods: {
     eventCallBack({ event, eventName }) {
-      this.$emit("windowEventCallBack", {
+      this.$emit('windowEventCallBack', {
         uuid: this.window.uuid,
         event: event,
-        eventName: eventName,
-      });
-    },
-  },
-};
+        eventName: eventName
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

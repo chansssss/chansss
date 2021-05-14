@@ -1,9 +1,9 @@
 <template>
-  <Win98Dialog @eventCallBack="eventCallBack" :zIndex="window.zIndex">
+  <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
     <div class="my-computer">
       <div class="toolbar--min win98-toolbar">
-        <div class="win98-toolbar--left"></div>
-        <div class="win98-toolbar--left"></div>
+        <div class="win98-toolbar--left" />
+        <div class="win98-toolbar--left" />
         <span>
           <button class="toolbar--button">
             <p>文件</p>
@@ -35,16 +35,16 @@
               height="32"
               src="data:image/gif;base64,R0lGODlhIAAgAOMJAAAAABAQEDExAJycAM7OY//OnP//nP//9////wQz/wQz/wQz/wQz/wQz/wQz/wQz/yH5BAEKAA8ALAAAAAAgACAAAATH8MlJq7146L0D/tSAGGRJDh6YjWaLqtZwtLTxwtJA7Hzvc0BgDkEsGo2Ho7IIeIhqUFOBNKUaCIFntDTtcr8FgkC7hVYL1euYVQZ/uWJyzZtu0ePstoG+/+LNUnNUXX9bZ32IaVOFgYaJZ4x2fV1eb2hqcnVRlHuXYWs0ipOJVp2fcpKBnpyLoJWviFxolGiRqayKs3uFsFaHpo94mmeHxLSzjL2enYPHwqPQ0Mu6pz7W19g9Ag8C3d7f4OHi3Tjl5ufo6eroEQA7"
               alt=""
-            />
+            >
             <p>我的电脑</p>
           </div>
-          <div class="folder-left--divider"></div>
+          <div class="folder-left--divider" />
           <div class="folder-left--desc">
             <p>选择项目以查看其说明。</p>
           </div>
         </div>
         <div class="folder-right">
-          <div class="file-item" v-for="(folder,index) in nowFolder" @click="callFolder(folder)" :key="index">
+          <div v-for="(folder,index) in nowFolder" :key="index" class="file-item" @click="callFolder(folder)">
             <div class="file-icon">
               <img
                 class="ui95-icon ui95-icon--folder ui95-icon--32 ui95-icon--file-icon"
@@ -55,10 +55,10 @@
                 height="32"
                 src="data:image/gif;base64,R0lGODlhIAAgAOMJAAAAABAQEDExAJycAM7OY//OnP//nP//9////wQz/wQz/wQz/wQz/wQz/wQz/wQz/yH5BAEKAA8ALAAAAAAgACAAAATH8MlJq7146L0D/tSAGGRJDh6YjWaLqtZwtLTxwtJA7Hzvc0BgDkEsGo2Ho7IIeIhqUFOBNKUaCIFntDTtcr8FgkC7hVYL1euYVQZ/uWJyzZtu0ePstoG+/+LNUnNUXX9bZ32IaVOFgYaJZ4x2fV1eb2hqcnVRlHuXYWs0ipOJVp2fcpKBnpyLoJWviFxolGiRqayKs3uFsFaHpo94mmeHxLSzjL2enYPHwqPQ0Mu6pz7W19g9Ag8C3d7f4OHi3Tjl5ufo6eroEQA7"
                 alt=""
-              />
+              >
             </div>
             <div class="file-name">
-              <span>{{folder.name}}</span>
+              <span>{{ folder.name }}</span>
             </div>
           </div>
         </div>
@@ -70,59 +70,61 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: "MyComputer",
+  name: 'MyComputer',
   props: {
     window: {
       type: Object,
-      required: true,
-    },
-  },
-  created() {
-    this.nowFolder = this.folders
+      required: true
+    }
   },
   data() {
     return {
       folders: [
         {
-          name: "file1",
-          icon: "",
-          type: "folder",
+          name: 'file1',
+          icon: '',
+          type: 'folder',
           childrens: [
             {
-              name: "file2",
-              icon: "",
-              type: "file",
-            },{
-              name: "file3",
-              icon: "",
-              type: "file",
-            },
-          ],
-        },
+              name: 'file2',
+              icon: '',
+              type: 'file'
+            }, {
+              name: 'file3',
+              icon: '',
+              type: 'file'
+            }
+          ]
+        }
       ],
-      nowFolder:[]
-    };
+      nowFolder: []
+    }
+  },
+  created() {
+    this.nowFolder = this.folders
   },
   methods: {
-    callFolder(file){
+    callFolder(file) {
       if (file.type === 'folder') {
-        this.nowFolder = file.childrens? file.childrens:[]
-      }else(
-        this.launchFile(file)
-      )
+        this.nowFolder = file.childrens ? file.childrens : []
+      } else {
+        (
+          this.launchFile(file)
+        )
+      }
     },
-    launchFile(file){
-      console.log(file);
+    launchFile(file) {
+      console.log(file)
     },
     eventCallBack({ event, eventName }) {
-      this.$emit("windowEventCallBack", {
+      this.$emit('windowEventCallBack', {
         uuid: this.window.uuid,
         event: event,
-        eventName: eventName,
-      });
-    },
-  },
-};
+        eventName: eventName
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

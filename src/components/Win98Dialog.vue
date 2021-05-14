@@ -3,8 +3,8 @@
     <div class="win98-dialog--header header">
       <div
         class="win98-dialog--dragmove-bar"
-        v-on:mousedown="mouseDownAndMoveEvent($event, 'dragMove')"
-      ></div>
+        @mousedown="mouseDownAndMoveEvent($event, 'dragMove')"
+      />
       <div class="win98-dialog--title title win98-text">{{ title }}</div>
       <div class="win98-dialog--buttons">
         <button class="win98-button" @click="commonClick($event, 'minimize')">
@@ -15,12 +15,12 @@
             title="Minimize"
             src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAINjI+py+0PGZhU0RpNAQA7"
             alt=""
-          />
+          >
         </button>
         <button
+          v-show="!isMaximize"
           class="win98-button"
           @click="dialogMaximize"
-          v-show="!isMaximize"
         >
           <img
             class="win98-icon maximize"
@@ -29,9 +29,9 @@
             title="Maximize"
             src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWDI4Ym732IngzMmqvthXm3klUo2RmAQA7"
             alt=""
-          />
+          >
         </button>
-        <button class="win98-button" @click="dialogRestore" v-show="isMaximize">
+        <button v-show="isMaximize" class="win98-button" @click="dialogRestore">
           <img
             class="win98-icon restore"
             size="custom"
@@ -39,7 +39,7 @@
             title="Restore"
             src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWjI8ZwK3tEkDzQLbozVZX83HUKG1HAQA7"
             alt=""
-          />
+          >
         </button>
         <button class="win98-button" @click="commonClick($event, 'close')">
           <img
@@ -49,116 +49,116 @@
             title="Close"
             src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIUjI8IoNy2ElxOhmgvtRgfr2WiWAAAOw=="
             alt=""
-          />
+          >
         </button>
       </div>
     </div>
     <div class="win98-dialog--content">
-      <slot></slot>
+      <slot />
     </div>
-    <div class="win98-dialog--footer"></div>
+    <div class="win98-dialog--footer" />
     <div
       class="win98-dialog__resize-left"
-      v-on:mousedown="mouseDownAndMoveEvent($event, 'leftResize')"
-    ></div>
+      @mousedown="mouseDownAndMoveEvent($event, 'leftResize')"
+    />
     <div
       class="win98-dialog__resize-right"
-      v-on:mousedown="mouseDownAndMoveEvent($event, 'rightResize')"
-    ></div>
+      @mousedown="mouseDownAndMoveEvent($event, 'rightResize')"
+    />
     <div
       class="win98-dialog__resize-top"
-      v-on:mousedown="mouseDownAndMoveEvent($event, 'topResize')"
-    ></div>
+      @mousedown="mouseDownAndMoveEvent($event, 'topResize')"
+    />
     <div
       class="win98-dialog__resize-bottom"
-      v-on:mousedown="mouseDownAndMoveEvent($event, 'bottomResize')"
-    ></div>
+      @mousedown="mouseDownAndMoveEvent($event, 'bottomResize')"
+    />
     <div
       class="win98-dialog__resize-corner"
-      v-on:mousedown="mouseDownAndMoveEvent($event, 'cornerResize')"
-    ></div>
+      @mousedown="mouseDownAndMoveEvent($event, 'cornerResize')"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  name: "Win98Dialog",
+  name: 'Win98Dialog',
   props: {
     zIndex: {
       type: Number,
-      required: true,
+      required: true
     }
-  },
-  computed: {
-    dialogStyle() {
-      return {
-        "z-index": this.zIndex,
-      };
-    },
   },
   data() {
     return {
-      title: "我的电脑",
+      title: '我的电脑',
       isMaximize: false,
       dialog: {
         top: 0,
         left: 0,
         width: 0,
-        height: 0,
-      },
-    };
+        height: 0
+      }
+    }
+  },
+  computed: {
+    dialogStyle() {
+      return {
+        'z-index': this.zIndex
+      }
+    }
   },
   methods: {
     commonClick(event, eventName) {
       if (eventName === 'minimize') {
         event.stopPropagation()
       }
-      this.$emit("eventCallBack", { event: event, eventName: eventName });
+      this.$emit('eventCallBack', { event: event, eventName: eventName })
     },
     dialogMaximize(e) {
-      let dom = e.path[4];
-      this.dialog.width = dom.offsetWidth;
-      this.dialog.height = dom.offsetHeight;
-      this.dialog.top = dom.offsetTop;
-      this.dialog.left = dom.offsetLeft;
-      dom.style.top = 0;
-      dom.style.left = 0;
-      dom.style.width = "100vw";
-      dom.style.height = "calc(100vh - 28px)";
-      this.isMaximize = true;
-      console.log(this.dialog);
+      const dom = e.path[4]
+      this.dialog.width = dom.offsetWidth
+      this.dialog.height = dom.offsetHeight
+      this.dialog.top = dom.offsetTop
+      this.dialog.left = dom.offsetLeft
+      dom.style.top = 0
+      dom.style.left = 0
+      dom.style.width = '100vw'
+      dom.style.height = 'calc(100vh - 28px)'
+      this.isMaximize = true
+      console.log(this.dialog)
     },
     dialogRestore(e) {
-      let dom = e.path[4];
-      console.log(dom);
-      dom.style.top = this.dialog.top + "px";
-      dom.style.left = this.dialog.left + "px";
-      dom.style.width = this.dialog.width + "px";
-      dom.style.height = this.dialog.height + "px";
-      this.isMaximize = false;
+      const dom = e.path[4]
+      console.log(dom)
+      dom.style.top = this.dialog.top + 'px'
+      dom.style.left = this.dialog.left + 'px'
+      dom.style.width = this.dialog.width + 'px'
+      dom.style.height = this.dialog.height + 'px'
+      this.isMaximize = false
     },
     initEvents() {},
     commonMoveEvent(dom, e, callBack) {
-      //获取鼠标按下的坐标
-      let mousedownX = e.clientX;
-      let mousedownY = e.clientY;
+      // 获取鼠标按下的坐标
+      const mousedownX = e.clientX
+      const mousedownY = e.clientY
 
-      //获取元素的left，top值
-      let left = dom.offsetLeft;
-      let top = dom.offsetTop;
+      // 获取元素的left，top值
+      const left = dom.offsetLeft
+      const top = dom.offsetTop
 
-      let width = dom.offsetWidth;
-      let height = dom.offsetHeight;
+      const width = dom.offsetWidth
+      const height = dom.offsetHeight
 
-      //给可视区域添加鼠标的移动事件
-      document.onmousemove = function (event) {
-        //获取鼠标移动时的坐标
-        let mouseMoveX = event.clientX;
-        let mouseMoveY = event.clientY;
+      // 给可视区域添加鼠标的移动事件
+      document.onmousemove = function(event) {
+        // 获取鼠标移动时的坐标
+        const mouseMoveX = event.clientX
+        const mouseMoveY = event.clientY
 
-        //计算出鼠标的移动距离
-        var moveX = mouseMoveX - mousedownX;
-        var moveY = mouseMoveY - mousedownY;
+        // 计算出鼠标的移动距离
+        var moveX = mouseMoveX - mousedownX
+        var moveY = mouseMoveY - mousedownY
 
         callBack({
           dom: dom,
@@ -167,77 +167,77 @@ export default {
           left: left,
           top: top,
           moveX: moveX,
-          moveY: moveY,
-        });
-      };
+          moveY: moveY
+        })
+      }
 
-      //清除
-      document.onmouseup = function () {
-        document.onmousemove = null;
-      };
+      // 清除
+      document.onmouseup = function() {
+        document.onmousemove = null
+      }
     },
     mouseDownAndMoveEvent(e, type) {
-      if (type === "dragMove") {
-        let dom = e.path[2];
-        this.commonMoveEvent(dom, e, this.dragMoveEvent);
+      if (type === 'dragMove') {
+        const dom = e.path[2]
+        this.commonMoveEvent(dom, e, this.dragMoveEvent)
       }
-      let dom = e.path[1];
-      if (type === "leftResize") {
-        this.commonMoveEvent(dom, e, this.leftResizeEvent);
+      const dom = e.path[1]
+      if (type === 'leftResize') {
+        this.commonMoveEvent(dom, e, this.leftResizeEvent)
       }
-      if (type === "rightResize") {
-        this.commonMoveEvent(dom, e, this.rightResizeEvent);
+      if (type === 'rightResize') {
+        this.commonMoveEvent(dom, e, this.rightResizeEvent)
       }
-      if (type === "topResize") {
-        this.commonMoveEvent(dom, e, this.topResizeEvent);
+      if (type === 'topResize') {
+        this.commonMoveEvent(dom, e, this.topResizeEvent)
       }
-      if (type === "bottomResize") {
-        this.commonMoveEvent(dom, e, this.bottomResizeEvent);
+      if (type === 'bottomResize') {
+        this.commonMoveEvent(dom, e, this.bottomResizeEvent)
       }
-      if (type === "cornerResize") {
-        this.commonMoveEvent(dom, e, this.cornerResizeEvent);
+      if (type === 'cornerResize') {
+        this.commonMoveEvent(dom, e, this.cornerResizeEvent)
       }
     },
     leftResizeEvent(data) {
-      let ls = data.moveX + data.left;
-      let changeWidth = data.width - data.moveX;
+      const ls = data.moveX + data.left
+      const changeWidth = data.width - data.moveX
       if (changeWidth >= 300) {
-        data.dom.style.left = ls + "px";
-        data.dom.style.width = changeWidth + "px";
+        data.dom.style.left = ls + 'px'
+        data.dom.style.width = changeWidth + 'px'
       }
     },
     rightResizeEvent(data) {
-      let changeWidth = data.width + data.moveX;
+      const changeWidth = data.width + data.moveX
       if (changeWidth >= 300) {
-        data.dom.style.width = changeWidth + "px";
+        data.dom.style.width = changeWidth + 'px'
       }
     },
     topResizeEvent(data) {
-      let top = data.moveY + data.top;
-      let changeHeight = data.height - data.moveY;
+      const top = data.moveY + data.top
+      const changeHeight = data.height - data.moveY
       if (changeHeight >= 300) {
-        data.dom.style.top = top + "px";
-        data.dom.style.height = changeHeight + "px";
+        data.dom.style.top = top + 'px'
+        data.dom.style.height = changeHeight + 'px'
       }
     },
     bottomResizeEvent(data) {
-      let changeHeight = data.height + data.moveY;
+      const changeHeight = data.height + data.moveY
       if (changeHeight >= 300) {
-        data.dom.style.height = changeHeight + "px";
+        data.dom.style.height = changeHeight + 'px'
       }
     },
     cornerResizeEvent(data) {
-      this.bottomResizeEvent(data);
-      this.rightResizeEvent(data);
+      this.bottomResizeEvent(data)
+      this.rightResizeEvent(data)
     },
     dragMoveEvent(data) {
-      let ls = data.moveX + data.left;
-      let lt = data.moveY + data.top;
-      data.dom.style.top = lt + "px";
-      data.dom.style.left = ls + "px";
-    },
-  },
-};
+      const ls = data.moveX + data.left
+      const lt = data.moveY + data.top
+      data.dom.style.top = lt + 'px'
+      data.dom.style.left = ls + 'px'
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
