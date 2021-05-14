@@ -234,3 +234,8 @@
     border-top: var(--px) solid var(--white);
     pointer-events: none;
 }
+
+
+.win98-input{
+  outline: none;
+}

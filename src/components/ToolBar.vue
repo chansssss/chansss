@@ -9,7 +9,7 @@
     </span>
     <div v-show="show" class="tool-tip">
       <div class="modal" />
-      <ToolTip :z-index="99999" class="dialog" @eventCallBack="toolTipEventCallBack">
+      <ToolTip :z-index="99999" :type="clickBtn.type" class="dialog" @eventCallBack="toolTipEventCallBack">
         <div class="content">
           {{ content }}
         </div>
@@ -30,6 +30,9 @@ export default {
     return {
       show: false,
       content: '',
+      clickBtn: {
+        type: 'message'
+      },
       parentElement: null
     }
   },
@@ -40,14 +43,21 @@ export default {
   },
   methods: {
     btnClick(btn) {
-      if (btn.type === 'tooltip') {
-        this.show = true
-        this.content = btn.content
+      if (btn.type) {
+        if (btn.type === 'message') {
+          this.content = btn.content || ''
+        }
       }
+      this.show = true
+      this.clickBtn = btn
     },
-    toolTipEventCallBack({ event, eventName }) {
+    toolTipEventCallBack({ eventName, data }) {
       if (eventName === 'close') {
         this.show = false
+      }
+      if (eventName === 'submit') {
+        console.log(data)
+        this.$emit('toolBarEventCallBack', { btnName: this.clickBtn.name, data: data })
       }
     }
   }

@@ -6,14 +6,10 @@
 
 <script>
 import * as THREE from 'three'
-import { getSatPoint } from '@/utils/sat-utils'
+import { getGroundTracks, getLatLngObj, getCatalogNumber } from 'tle.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 export default {
   props: {
-    tle: {
-      type: String,
-      default: ''
-    }
   },
   data() {
     return {
@@ -21,8 +17,9 @@ export default {
       camera: null,
       renderer: null,
       earth: null,
-      orbitLine: null,
-      sat: null,
+      orbitLines: {},
+      sats: {},
+      tles: {},
       earthMapImg: ''
     }
   },
@@ -30,13 +27,21 @@ export default {
     this.earthMapImg = require('../../../assets/imgs/earth.jpg')
     this.initThree()
     this.initEarth()
-    this.initSat()
     this.initStars()
     this.initLight()
-    this.$emit('loadDone')
     this.animate()
   },
   methods: {
+    handlerDrawSatAnOrbit(tle) {
+      if (tle) {
+        const satNumber = getCatalogNumber(tle)
+        if (satNumber) {
+          this.tles[satNumber] = tle
+          this.drawOrbit(tle, satNumber)
+          this.drawSat(tle, satNumber)
+        }
+      }
+    },
     getThreInstance() {
       return { scene: this.scene, camera: this.camera, renderer: this.renderer }
     },
@@ -98,15 +103,21 @@ export default {
       this.earth = new THREE.Mesh(geometry, material)
       this.scene.add(this.earth)
     },
-    initSat() {
+    drawSat(tle, number) {
+      const element = this.getSatPoint(tle)
+      const point = this.getThreePosition(element[1], element[0], 12)
       const geometry = new THREE.SphereGeometry(0.3, 32, 32)
       const material = new THREE.MeshPhongMaterial({
         shininess: 40,
         bumpScale: 1,
         color: 0x3498db
       })
-      this.sat = new THREE.Mesh(geometry, material)
-      this.scene.add(this.sat)
+      const sat = new THREE.Mesh(geometry, material)
+      sat.position.x = point.x
+      sat.position.y = point.y
+      sat.position.z = point.z
+      this.sats[number] = sat
+      this.scene.add(sat)
     },
     initLight() {
       // var axesHelper = new THREE.AxesHelper(50);
@@ -133,17 +144,27 @@ export default {
     render() {
       this.renderer.render(this.scene, this.camera)
     },
-    drawOrbit(orbit) {
-      const points = []
-      for (let i = 0; i < orbit.length; i++) {
-        const element = orbit[i]
-        const point = this.getThreePosition(element[1], element[0], 12)
-        points.push(point)
-      }
-      const material = new THREE.LineBasicMaterial({ color: 0xecf0f1 })
-      const geometry = new THREE.BufferGeometry().setFromPoints(points)
-      this.orbitLine = new THREE.Line(geometry, material)
-      this.scene.add(this.orbitLine)
+    drawOrbit(tle, number) {
+      const self = this
+      getGroundTracks({
+        tle: tle,
+        startTimeMS: +new Date(),
+        stepMS: 100000,
+        isLngLatFormat: true
+      }).then(function(threeOrbitsArr) {
+        const orbit = threeOrbitsArr[1]
+        const points = []
+        for (let i = 0; i < orbit.length; i++) {
+          const element = orbit[i]
+          const point = self.getThreePosition(element[1], element[0], 12)
+          points.push(point)
+        }
+        const material = new THREE.LineBasicMaterial({ color: 0xecf0f1 })
+        const geometry = new THREE.BufferGeometry().setFromPoints(points)
+        const orbitLine = new THREE.Line(geometry, material)
+        self.orbitLines[number] = orbitLine
+        self.scene.add(orbitLine)
+      })
     },
     getThreePosition(lat, lon, radius) {
       var phi = (90 - lat) * (Math.PI / 180)
@@ -152,6 +173,10 @@ export default {
       const z = ((radius) * Math.sin(phi) * Math.sin(theta))
       const y = ((radius) * Math.cos(phi))
       return new THREE.Vector3(x, y, z)
+    },
+    getSatPoint(tleStr) {
+      const latLonObj = getLatLngObj(tleStr, +new Date())
+      return [latLonObj.lng, latLonObj.lat]
     },
     initStars() {
       const r = 30; const starsGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry()]
@@ -202,23 +227,26 @@ export default {
     },
     animate() {
       const self = this
-      const clock = new THREE.Clock()
+      // const clock = new THREE.Clock()
       function tick() {
-        const elapsedTime = clock.getElapsedTime()
+        // const elapsedTime = clock.getElapsedTime()
 
         // Update objects
         // self.earth.rotation.y = .5 * elapsedTime
         // if (self.orbitLine) {
         //   self.orbitLine.rotation.y = .5 * elapsedTime
         // }
-        if (self.sat) {
-          const point = getSatPoint(self.tle)
-          const position = self.getThreePosition(point[1], point[0], 12)
-          self.sat.position.x = position.x
-          self.sat.position.y = position.y
-          self.sat.position.z = position.z
-          self.sat.rotation.y = 0.5 * elapsedTime
-          self
+        if (self.sats) {
+          for (const key in self.sats) {
+            if (key !== 'undefined' && Object.hasOwnProperty.call(self.sats, key)) {
+              const sat = self.sats[key]
+              const point = self.getSatPoint(self.tles[key])
+              const position = self.getThreePosition(point[1], point[0], 12)
+              sat.position.x = position.x
+              sat.position.y = position.y
+              sat.position.z = position.z
+            }
+          }
         }
 
         // Update Orbital Controls

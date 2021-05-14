@@ -19,9 +19,16 @@
       </div>
     </div>
     <div class="win98-dialog--content">
-      <slot />
+      <div v-if="type === 'confirm'" class="confirm">
+        <input v-model="confirmText" class="win98-input input" type="text">
+      </div>
+      <div v-if="type === 'message'" class="message">
+        <slot />
+      </div>
     </div>
-    <div class="win98-dialog--footer" />
+    <div v-if="type !== 'message'" class="win98-dialog--footer footer">
+      <button class="win98-button" @click="submit">确认</button>
+    </div>
   </div>
 </template>
 
@@ -29,6 +36,10 @@
 export default {
   name: 'ToolTip',
   props: {
+    type: {
+      type: String,
+      default: 'message'
+    },
     title: {
       type: String,
       default: '提示'
@@ -48,6 +59,7 @@ export default {
   },
   data() {
     return {
+      confirmText: ''
     }
   },
   computed: {
@@ -60,6 +72,11 @@ export default {
     }
   },
   methods: {
+    submit() {
+      if (this.type === 'confirm') {
+        this.$emit('eventCallBack', { eventName: 'submit', data: { content: this.confirmText }})
+      }
+    },
     commonClick(event, eventName) {
       if (eventName === 'minimize') {
         event.stopPropagation()
@@ -72,10 +89,10 @@ export default {
 
 <style lang="less" scoped>
 .win98-dialog {
-  height: 150px;
-  width: 100px;
-  top: 50%;
-  left: 25%;
+  min-width: 200px !important;
+  min-height: 100px !important;
+  top: 45%;
+  left: 34%;
   transform: translateX(-50%);
   transform: translateY(-50%);
 }
@@ -83,6 +100,16 @@ export default {
   height: 100%;
   width: 100%;
   position: relative;
+  .confirm{
+    padding: 10px;
+    .input{
+      width: 180px;
+      margin: auto;
+    }
+  }
+  .message{
+    padding: 15px;
+  }
 }
 .header {
   min-height: 18px;
@@ -90,5 +117,12 @@ export default {
 .title {
   font-size: calc(10 * var(--px));
   text-align: left;
+}
+
+.footer{
+  padding: 10px;
+  button{
+    float: right;
+  }
 }
 </style>

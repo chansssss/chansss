@@ -1,8 +1,8 @@
 <template>
   <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
-    <ToolBar :btns="toolBarBtns" />
+    <ToolBar :btns="toolBarBtns" @toolBarEventCallBack="toolBarEventCallBack" />
     <div class="orbit-container">
-      <Earth3D ref="earth" :tle="tleStr" @loadDone="loadDone" />
+      <Earth3D ref="earth" />
       <div class="sat-meta">
         <p>名称： {{ satMeta.name }}</p>
         <p>时间： {{ nowTime }}</p>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { getGroundTracks, getLatLngObj, getSatelliteInfo } from 'tle.js'
+import { getLatLngObj, getSatelliteInfo } from 'tle.js'
 import Earth3D from './Earth3D'
 import dayjs from 'dayjs'
 
@@ -33,11 +33,12 @@ export default {
     return {
       toolBarBtns: [
         {
-          name: '导入TLE'
+          name: '导入TLE',
+          type: 'confirm'
         },
         {
           name: '帮助',
-          type: 'tooltip',
+          type: 'message',
           content: '卫星追踪软件，使用卫星的tle数据计算出卫星轨道以及实时位置等信息。'
         }
       ],
@@ -64,8 +65,12 @@ export default {
   },
   mounted() {
     this.updateSatMeta()
+    this.addTle(this.tleStr)
   },
   methods: {
+    toolBarEventCallBack(btnName, data) {
+      console.log(btnName, data)
+    },
     eventCallBack({ event, eventName }) {
       if (eventName === 'resize') {
         this.$refs.earth.resize()
@@ -96,30 +101,12 @@ export default {
         self.nowTime = dayjs(new Date()).format('HH:mm:ss')
       }, 1000)
     },
-    loadDone() {
-      this.computerOrbitLine()
-    },
-    init() {
-      this.drawOrbitOfThree()
-    },
-    drawOrbitOfThree() {
-      this.$refs.earth.drawOrbit(this.orbitLine)
+    addTle(tle) {
+      this.$refs.earth.handlerDrawSatAnOrbit(tle)
     },
     getSatPoint() {
       const latLonObj = getLatLngObj(this.tleStr, +new Date())
       return [latLonObj.lng, latLonObj.lat]
-    },
-    computerOrbitLine() {
-      const self = this
-      getGroundTracks({
-        tle: self.tleStr,
-        startTimeMS: this.optionalTimestampMS,
-        stepMS: 100000,
-        isLngLatFormat: true
-      }).then(function(threeOrbitsArr) {
-        self.orbitLine = threeOrbitsArr[1]
-        self.init()
-      })
     }
   }
 }
