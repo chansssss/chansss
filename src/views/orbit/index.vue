@@ -5,13 +5,10 @@
       <div class="sat-meta">
         <p>名称：{{ satMeta.name }}</p>
         <p>时间：{{ nowTime }}</p>
+        <p>经度：{{ satMeta.lng }}</p>
+        <p>纬度：{{ satMeta.lat }}</p>
         <p>高度：{{ satMeta.height }} km</p>
         <p>速度：{{ satMeta.velocity }} km/s</p>
-      </div>
-      <div class="sat-point">
-        <span>经度：{{ satMeta.lng }}</span>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span>纬度：{{ satMeta.lat }}</span>
       </div>
     </div>
   </Win98Dialog>
@@ -41,7 +38,7 @@ export default {
       orbitLine: null,
       nowTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       satMeta: {
-        name: '南通中学号',
+        name: 'ISS (ZARYA)',
         lat: '',
         lng: ''
       }

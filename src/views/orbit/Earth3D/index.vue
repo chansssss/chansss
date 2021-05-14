@@ -31,7 +31,7 @@ export default {
     this.initThree()
     this.initEarth()
     this.initSat()
-    // this.initStars()
+    this.initStars()
     this.initLight()
     this.$emit('loadDone')
     this.animate()
@@ -83,8 +83,7 @@ export default {
         canvas: canvas,
         alpha: true
       })
-      const controls = new OrbitControls(this.camera, this.renderer.domElement)
-      console.log(controls)
+      new OrbitControls(this.camera, this.renderer.domElement)
       this.renderer.setSize(sizes.width, sizes.height)
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     },
@@ -113,28 +112,23 @@ export default {
       // var axesHelper = new THREE.AxesHelper(50);
       // this.scene.add(axesHelper);
       this.scene.add(new THREE.AmbientLight(0x888888))
-      const pointLight = new THREE.PointLight(0xffffff, 1, 100)
-      pointLight.position.set(0, 0, 30)
-      // this.scene.add(pointLight);
+      // const pointLight = new THREE.PointLight(0xffffff, 1, 100)
+      // pointLight.position.set(0, 0, 30)
+      // this.scene.add(pointLight)
       var light = new THREE.DirectionalLight(0xcccccc, 1)
       light.position.set(5, 5, 30)
-      this.scene.add(light)
       light.castShadow = true
-      light.shadowCameraNear = 0.01
-      light.shadowCameraFar = 15
-      light.shadowCameraFov = 45
-
-      light.shadowCameraLeft = -1
-      light.shadowCameraRight = 1
-      light.shadowCameraTop = 1
-      light.shadowCameraBottom = -1
-      // light.shadowCameraVisible	= true
-
-      light.shadowBias = 0.001
-      light.shadowDarkness = 0.2
-
-      light.shadowMapWidth = 1024 * 2
-      light.shadowMapHeight = 1024 * 2
+      light.shadow.camera.near = 0.01
+      light.shadow.camera.far = 15
+      light.shadow.camera.fov = 45
+      light.shadow.camera.left = -1
+      light.shadow.camera.right = 1
+      light.shadow.camera.top = 1
+      light.shadow.camera.bottom = -1
+      light.shadow.bias = 0.001
+      light.shadow.mapSize.width = 1024 * 2
+      light.shadow.mapSize.height = 1024 * 2
+      this.scene.add(light)
     },
     render() {
       this.renderer.render(this.scene, this.camera)

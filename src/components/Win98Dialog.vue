@@ -126,7 +126,7 @@ export default {
       dom.style.width = '100vw'
       dom.style.height = 'calc(100vh - 28px)'
       this.isMaximize = true
-      console.log(this.dialog)
+      this.$emit('eventCallBack', { event: e, eventName: 'resize' })
     },
     dialogRestore(e) {
       const dom = e.path[4]
