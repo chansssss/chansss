@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
+  <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <ToolBar :btns="toolBarBtns" @toolBarEventCallBack="toolBarEventCallBack" />
     <div class="orbit-container">
       <Earth3D ref="earth" />
@@ -39,7 +39,7 @@ export default {
         {
           name: '帮助',
           type: 'message',
-          content: '卫星追踪软件，使用卫星的tle数据计算出卫星轨道以及实时位置等信息。'
+          content: '卫星追踪软件，使用卫星的tle数据计算出卫星轨道以及实时位置等信息。tle数据来源:<a href="http://celestrak.com/NORAD/elements"  target="_blank">celestrak</a>'
         }
       ],
       tleStr: '',
@@ -117,8 +117,8 @@ export default {
 
 <style lang="less" scoped>
 .orbit-container {
-  width: 100%;
-  height: 100%;
+  width: 800px;
+  height: 600px;
   position: relative;
 }
 .sat-meta {

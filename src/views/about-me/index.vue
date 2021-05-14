@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
+  <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <h1>关于我</h1>
   </Win98Dialog>
 </template>

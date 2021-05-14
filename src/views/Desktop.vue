@@ -15,7 +15,7 @@
               classnames="file-icon"
               width="32"
               height="32"
-              src="data:image/gif;base64,R0lGODlhIAAgAIQfAAAAABgYGCEhIQAxMQAxnDExnABjY1JSUlpaWgCAAGNjYwCAgACcnISEhJSUlJycnJyczjHOzq2tlM6c/7W1tcDAwJzO/zH/Y87Ozs7O/+fn1ufn5+/v7///9////wQz/yH5BAEKAB8ALAAAAAAgACAAAAX+4CeO42OeaJqSrPhoVSzPtNwAbentfM/9wF+locDlHp6fRsNZNpnOKLGY+zw6moF2y+3CpsYWMssoMxbnhUFtaHOGCurRQ44wCvh8Xv2Nh1ljA2YFFhmGhwR8cHJiHhuCenoEGYkGfYyAHRyQEJ2eEAQTAYpgVYF3Gj1LARmjlot/JKcFqTtLGAG5pH6mjpBLwBi4C2yXsSWakHm5zGq7mLJYA8TU1c5txqbSXdxb2UeaGxob5OXm5rCmMDXsM2AKRwoIB/T08/X4+QAKDwI5AAADChxIkJ+CAIDiKFzIsGGcB3EQynoC7JYwDBIySnDgwESDKQcBabiQwKIMjRJtBAjIJeAjSIklTFZAmVHFA5cKYX5wybOnT585S1CoSDEKUaIQQ5Z4AwBG0wpNJTR9MLWqhqQ6HzBl6pSDVA1SOVC9CuBNRFlOYwBQyxZqBapvAbyAmLVoxbsXMZyUQBeQzb9/lcpySJiwzhEhAAA7"
+              :src="application.img"
               alt=""
             >
           </div>
@@ -87,18 +87,21 @@ export default {
           name: '我的电脑',
           hasMultiple: true,
           hasLaunched: false,
+          img: require('@/assets/imgs/computer.png'),
           componentName: 'MyComputer'
         },
         {
           name: '卫星跟踪',
           hasMultiple: false,
           hasLaunched: false,
+          img: require('@/assets/imgs/sat.png'),
           componentName: 'Orbit'
         },
         {
           name: '象棋',
           hasMultiple: false,
           hasLaunched: false,
+          img: require('@/assets/imgs/chess.png'),
           componentName: 'Chess'
         }
       ],

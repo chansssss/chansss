@@ -46,11 +46,11 @@ export default {
     },
     width: {
       type: String,
-      default: '150px'
+      default: 'auto'
     },
     height: {
       type: String,
-      default: '100px'
+      default: 'auto'
     },
     zIndex: {
       type: Number,
@@ -89,12 +89,11 @@ export default {
 
 <style lang="less" scoped>
 .win98-dialog {
-  min-width: 200px !important;
+  min-width: 300px !important;
   min-height: 100px !important;
-  top: 45%;
-  left: 34%;
-  transform: translateX(-50%);
-  transform: translateY(-50%);
+  top: 30%;
+  left:50%;
+  transform: translateY(-50%) translateX(-50%);
 }
 .win98-dialog--content{
   height: 100%;

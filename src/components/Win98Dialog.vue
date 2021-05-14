@@ -87,11 +87,14 @@ export default {
     zIndex: {
       type: Number,
       required: true
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      title: '我的电脑',
       isMaximize: false,
       dialog: {
         top: 0,
@@ -243,10 +246,8 @@ export default {
 
 <style lang="less" scoped>
 .win98-dialog {
-  height: 600px;
-  width: 600px;
-  top: 150px;
-  left: 200px;
+  top: 100px;
+  left: 150px;
 }
 .win98-dialog--content{
   height: 100%;

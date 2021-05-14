@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
+  <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <div class="my-computer">
       <div class="toolbar--min win98-toolbar">
         <div class="win98-toolbar--left" />

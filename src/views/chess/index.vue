@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
+  <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <div class="game-container">
       <div class="left">
         <div class="chessboard">
@@ -35,7 +35,15 @@
           </template>
         </div>
       </div>
-      <div class="right" />
+      <div class="right">
+        <h2>
+          <span :class="colorMapper[currentRound]">{{ colorMapper[currentRound]==='red'?'红方':'黑方' }}</span>
+          回合
+        </h2>
+        <h2 v-if="isJiangJun" class="red">
+          将军
+        </h2>
+      </div>
     </div>
   </Win98Dialog>
 </template>
@@ -59,6 +67,7 @@ export default {
         top: 'black',
         bottom: 'red'
       },
+      isJiangJun: false,
       kingsPoint: {
         top: { type: 'top', name: '帅', position: [0, 4] },
         bottom: { type: 'bottom', name: '帅', position: [8, 4] }
@@ -147,7 +156,7 @@ export default {
         // 判断该点是否能落子
         if (this.checkCanMove(this.currentSelectChessman, targetPoint)) {
           this.moveChessman(this.currentSelectChessman, targetPoint)
-          console.log('----' + this.isDanger('top'))
+          this.isJiangJun = this.isDanger(this.currentRound)
         } else {
           return
         }
@@ -257,7 +266,8 @@ export default {
     // 判断象的落点是否合法
     canMoveOfXiang(c_x, c_y, t_x, t_y) {
       const { count, axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y)
-      if (axis === 'oblique' && distance === 2 && count === 0) return true
+      console.log(count, axis, distance)
+      if (axis === 'oblique' && Math.abs(distance) === 2 && count === 0) return true
       return false
     },
     // 判断仕的落点是否合法
@@ -334,7 +344,7 @@ export default {
       }
       if (Math.abs(dValueX) === Math.abs(dValueY)) {
         resp.distance = Math.abs(dValueX)
-        for (let i = 1; i <= resp.distance; i++) {
+        for (let i = 1; i < resp.distance; i++) {
           const element = this.chessboard[x + i][y + i]
           if (element.type !== 'none') {
             resp.count++
@@ -362,10 +372,9 @@ export default {
 
       this.currentSelectChessman = null
       // 更新 帅 的点
+      console.log(this.chessboard[targetX][targetY])
       if (currentPoint.name === '帅') {
-        this.kingsPoint[currentPoint.type] = JSON.stringify(
-          JSON.parse(this.chessboard[targetX][targetY])
-        )
+        this.kingsPoint[currentPoint.type] = this.chessboard[targetX][targetY]
       }
       // 更新当前该谁落子
       this.currentRound = this.currentRound === 'top' ? 'bottom' : 'top'
@@ -434,7 +443,6 @@ export default {
           border: 1px dotted black;
         }
         .chessman {
-          font-family: 'LiSu';
           margin: 3px;
           background-color: blanchedalmond;
           display: block;
@@ -442,6 +450,7 @@ export default {
           width: 30px;
           height: 30px;
           line-height: 30px;
+          padding: 0 6px;
           border: 1px solid black;
           border-radius: 50%;
         }

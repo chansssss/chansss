@@ -35,7 +35,6 @@ export default {
     handlerDrawSatAnOrbit(tle) {
       if (tle) {
         const satNumber = getCatalogNumber(tle)
-        console.log(satNumber)
         if (satNumber) {
           this.tles[satNumber] = tle
           this.drawOrbit(tle, satNumber)
@@ -147,13 +146,18 @@ export default {
     },
     drawOrbit(tle, number) {
       const self = this
+      const stepMS = 1000
       getGroundTracks({
         tle: tle,
         startTimeMS: +new Date(),
-        stepMS: 100000,
+        stepMS: stepMS,
         isLngLatFormat: true
       }).then(function(threeOrbitsArr) {
-        const orbit = threeOrbitsArr[1]
+        console.log(threeOrbitsArr)
+        let orbit = threeOrbitsArr[1]
+        if (!orbit) {
+          orbit = threeOrbitsArr[0]
+        }
         const points = []
         for (let i = 0; i < orbit.length; i++) {
           const element = orbit[i]

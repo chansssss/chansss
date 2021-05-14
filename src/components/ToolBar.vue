@@ -10,8 +10,8 @@
     <div v-show="show" class="tool-tip">
       <div class="modal" />
       <ToolTip :z-index="99999" :type="clickBtn.type" class="dialog" @eventCallBack="toolTipEventCallBack">
-        <div class="content">
-          {{ content }}
+        <div class="content" v-html="content">
+          <span v-html="content" />
         </div>
       </ToolTip>
     </div>
@@ -56,6 +56,7 @@ export default {
         this.show = false
       }
       if (eventName === 'submit') {
+        this.show = false
         this.$emit('toolBarEventCallBack', { btnName: this.clickBtn.name, data: data })
       }
     }
@@ -98,5 +99,9 @@ export default {
     background-color: darkgrey;
     opacity: 0.6;
   }
+}
+.content{
+  line-height: 20px;
+  font-size: 1rem;
 }
 </style>
