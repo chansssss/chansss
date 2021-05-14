@@ -201,6 +201,7 @@ export default {
           return true;
         }
       }
+      return false
     },
     // 判断车的落点是否合法
     canMoveOfChe(c_x, c_y, t_x, t_y) {
@@ -268,7 +269,7 @@ export default {
     // 判断帅的落点是否合法
     canMoveOfShuai(c_x, c_y, t_x, t_y, currentPoint) {
       let { axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y);
-      if (axis === "xaxis" || (axis === "yaxis" && distance === 1)) {
+      if (axis === "xaxis" || (axis === "yaxis" && Math.abs(distance) === 1)) {
         if (currentPoint.type === "bottom" && t_x >= 7 && t_y >= 3 && t_y <= 5)
           return true;
         if (currentPoint.type === "top" && t_x <= 2 && t_y >= 3 && t_y <= 5)
@@ -318,7 +319,7 @@ export default {
           }
         }
         resp.axis = "yaxis";
-        resp.distance = Math.abs(dValueY);
+        resp.distance = dValueY;
       }
       if (dValueY === 0) {
         for (let i = x + 1; i < Math.abs(dValueX) + x; i++) {
@@ -328,7 +329,7 @@ export default {
           }
         }
         resp.axis = "xaxis";
-        resp.distance = Math.abs(dValueX);
+        resp.distance = dValueX;
       }
       if (Math.abs(dValueX) === Math.abs(dValueY)) {
         resp.distance = Math.abs(dValueX);
@@ -409,7 +410,7 @@ export default {
       display: flex;
       flex-wrap: wrap;
       width: 408px;
-      height: 480px;
+      height: 415px;
       background-image: url(../../assets/imgs/bg.png);
       background-size: 400px 480px;
       margin: 20px auto;
@@ -445,7 +446,7 @@ export default {
 
       .tchou {
         width: 100%;
-        height: 92px;
+        height: 30px;
       }
     }
   }
