@@ -20,7 +20,7 @@
     </div>
     <div class="win98-dialog--content">
       <div v-if="type === 'confirm'" class="confirm">
-        <input v-model="confirmText" class="win98-input input" type="text">
+        <textarea v-model="confirmText" class="win98-input input" type="text" rows="4" cols="50" />
       </div>
       <div v-if="type === 'message'" class="message">
         <slot />
@@ -74,7 +74,7 @@ export default {
   methods: {
     submit() {
       if (this.type === 'confirm') {
-        this.$emit('eventCallBack', { eventName: 'submit', data: { content: this.confirmText }})
+        this.$emit('eventCallBack', { eventName: 'submit', data: this.confirmText })
       }
     },
     commonClick(event, eventName) {

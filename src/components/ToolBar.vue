@@ -56,7 +56,6 @@ export default {
         this.show = false
       }
       if (eventName === 'submit') {
-        console.log(data)
         this.$emit('toolBarEventCallBack', { btnName: this.clickBtn.name, data: data })
       }
     }

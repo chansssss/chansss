@@ -35,6 +35,7 @@ export default {
     handlerDrawSatAnOrbit(tle) {
       if (tle) {
         const satNumber = getCatalogNumber(tle)
+        console.log(satNumber)
         if (satNumber) {
           this.tles[satNumber] = tle
           this.drawOrbit(tle, satNumber)

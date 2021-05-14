@@ -68,8 +68,10 @@ export default {
     this.addTle(this.tleStr)
   },
   methods: {
-    toolBarEventCallBack(btnName, data) {
-      console.log(btnName, data)
+    toolBarEventCallBack({ btnName, data }) {
+      if (btnName === '导入TLE') {
+        this.addTle(data)
+      }
     },
     eventCallBack({ event, eventName }) {
       if (eventName === 'resize') {
@@ -102,6 +104,7 @@ export default {
       }, 1000)
     },
     addTle(tle) {
+      console.log('addtle')
       this.$refs.earth.handlerDrawSatAnOrbit(tle)
     },
     getSatPoint() {
