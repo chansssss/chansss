@@ -1,14 +1,15 @@
 <template>
   <Win98Dialog :z-index="window.zIndex" @eventCallBack="eventCallBack">
+    <ToolBar :btns="toolBarBtns" />
     <div class="orbit-container">
       <Earth3D ref="earth" :tle="tleStr" @loadDone="loadDone" />
       <div class="sat-meta">
-        <p>名称：{{ satMeta.name }}</p>
-        <p>时间：{{ nowTime }}</p>
-        <p>经度：{{ satMeta.lng }}</p>
-        <p>纬度：{{ satMeta.lat }}</p>
-        <p>高度：{{ satMeta.height }} km</p>
-        <p>速度：{{ satMeta.velocity }} km/s</p>
+        <p>名称： {{ satMeta.name }}</p>
+        <p>时间： {{ nowTime }}</p>
+        <p>经度： {{ satMeta.lng }}</p>
+        <p>纬度： {{ satMeta.lat }}</p>
+        <p>高度： {{ satMeta.height }} km</p>
+        <p>速度： {{ satMeta.velocity }} km/s</p>
       </div>
     </div>
   </Win98Dialog>
@@ -30,6 +31,16 @@ export default {
   },
   data() {
     return {
+      toolBarBtns: [
+        {
+          name: '导入TLE'
+        },
+        {
+          name: '帮助',
+          type: 'tooltip',
+          content: '卫星追踪软件，使用卫星的tle数据计算出卫星轨道以及实时位置等信息。'
+        }
+      ],
       tleStr: '',
       optionalTimestampMS: +new Date(),
       map: null,
@@ -82,7 +93,7 @@ export default {
       const self = this
       setInterval(() => {
         self.getSatMeta()
-        self.nowTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+        self.nowTime = dayjs(new Date()).format('HH:mm:ss')
       }, 1000)
     },
     loadDone() {
@@ -124,7 +135,7 @@ export default {
   position: absolute;
   top: 10px;
   left: 10px;
-  min-width: 150px;
+  width: 150px;
   height: auto;
   border-radius: 4px;
   box-shadow: 0 1px 5px #2c3e50;

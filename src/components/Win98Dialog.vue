@@ -251,6 +251,7 @@ export default {
 .win98-dialog--content{
   height: 100%;
   width: 100%;
+  position: relative;
 }
 .header {
   min-height: 18px;

@@ -183,7 +183,6 @@
 
 
 .win98-toolbar{
-    position: relative;
     display: flex;
     align-items: stretch;
     background: var(--gray);

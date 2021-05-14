@@ -11,11 +11,15 @@ import Chess from '@/views/chess'
 import Orbit from '@/views/orbit'
 
 import Win98Dialog from '@/components/Win98Dialog'
+import ToolBar from '@/components/ToolBar'
+import ToolTip from '@/components/ToolTip'
 
 Vue.component('MyComputer', MyComputer)
 Vue.component('AboutMe', AboutMe)
 Vue.component('Chess', Chess)
 Vue.component('Win98Dialog', Win98Dialog)
+Vue.component('ToolBar', ToolBar)
+Vue.component('ToolTip', ToolTip)
 Vue.component('StartMenu', StartMenu)
 Vue.component('Orbit', Orbit)
 
