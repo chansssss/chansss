@@ -36,13 +36,25 @@
         </div>
       </div>
       <div class="right">
-        <h2>
-          <span :class="colorMapper[currentRound]">{{ colorMapper[currentRound]==='red'?'红方':'黑方' }}</span>
-          回合
-        </h2>
-        <h2 v-if="isJiangJun" class="red">
-          将军
-        </h2>
+        <template v-if="!over">
+          <h2>
+            <span :class="colorMapper[currentRound]">{{ colorMapper[currentRound]==='red'?'红方':'黑方' }}</span>
+            回合
+          </h2>
+          <h2 v-if="isJiangJun" class="red">
+            将军
+          </h2>
+        </template>
+        <template v-if="over">
+          <h2>
+            <span :class="colorMapper[currentRound]">{{ colorMapper[currentRound]==='red'?'黑方':'红方' }}</span>
+            胜
+          </h2>
+          <h2 v-if="isJiangJun" class="red">
+            游戏结束
+          </h2>
+          <button @click="restart()">重新开始</button>
+        </template>
       </div>
     </div>
   </Win98Dialog>
@@ -61,6 +73,7 @@ export default {
   data() {
     return {
       chessboard: [],
+      over: false,
       currentRound: 'bottom',
       currentSelectChessman: null,
       colorMapper: {
@@ -79,6 +92,16 @@ export default {
     this.initChessman()
   },
   methods: {
+    restart() {
+      this.initChessman()
+      this.over = false
+      this.isJiangJun = false
+      this.currentRound = 'bottom'
+      this.kingsPoint = {
+        top: { type: 'top', name: '帅', position: [0, 4] },
+        bottom: { type: 'bottom', name: '帅', position: [8, 4] }
+      }
+    },
     // 初始化棋盘上的点
     initChessboard() {
       const row = 10
@@ -128,12 +151,14 @@ export default {
     },
     // 用户点击棋子事件，可能是落点，可能是选中棋子
     selectOrMove(event, point) {
-      point = JSON.parse(JSON.stringify(point))
-      // select event
-      if (this.currentSelectChessman) {
-        this.moveChessmanBefore(point)
-      } else {
-        this.selectChessman(point)
+      if (!this.over) {
+        point = JSON.parse(JSON.stringify(point))
+        // select event
+        if (this.currentSelectChessman) {
+          this.moveChessmanBefore(point)
+        } else {
+          this.selectChessman(point)
+        }
       }
     },
     // 选中棋子事件
@@ -156,7 +181,12 @@ export default {
         // 判断该点是否能落子
         if (this.checkCanMove(this.currentSelectChessman, targetPoint)) {
           this.moveChessman(this.currentSelectChessman, targetPoint)
-          this.isJiangJun = this.isDanger(this.currentRound)
+          if (!this.over) {
+            this.isJiangJun = this.isDanger('top')
+            if (!this.isJiangJun) {
+              this.isJiangJun = this.isDanger('bottom')
+            }
+          }
         } else {
           return
         }
@@ -356,6 +386,7 @@ export default {
     },
     // 移动棋子
     moveChessman(currentPoint, targetPoint) {
+      const targetName = targetPoint.name
       const x = currentPoint.position[0]
       const y = currentPoint.position[1]
       this.chessboard[x][y].name = ''
@@ -364,6 +395,7 @@ export default {
 
       const targetX = targetPoint.position[0]
       const targetY = targetPoint.position[1]
+
       this.chessboard[targetX][targetY].name = currentPoint.name
       this.chessboard[targetX][targetY].type = currentPoint.type
       this.chessboard[targetX][targetY].color = this.colorMapper[
@@ -375,9 +407,17 @@ export default {
       console.log(this.chessboard[targetX][targetY])
       if (currentPoint.name === '帅') {
         this.kingsPoint[currentPoint.type] = this.chessboard[targetX][targetY]
+      } else if (targetName === '帅') {
+        this.kingsPoint[currentPoint.type] = null
+      }
+      if (!this.kingsPoint[currentPoint.type]) {
+        this.gameOver()
       }
       // 更新当前该谁落子
       this.currentRound = this.currentRound === 'top' ? 'bottom' : 'top'
+    },
+    gameOver() {
+      this.over = true
     },
     eventCallBack({ event, eventName }) {
       this.$emit('windowEventCallBack', {
