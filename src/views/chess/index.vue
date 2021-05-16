@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
+  <Win98Dialog width="600px" height="475px" :can-resize="false" :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <div class="game-container">
       <div class="left">
         <div class="chessboard">
@@ -451,8 +451,7 @@ export default {
 @tchouHeight: 40px;
 
 .game-container {
-  width: 550px;
-  height: 500px;
+  width: 600px;
   background-color: #fff;
   display: flex;
   .left {
@@ -507,6 +506,8 @@ export default {
     }
   }
   .right {
+    padding: 50px 10px;
+    text-align: center;
     flex: 1;
   }
 }

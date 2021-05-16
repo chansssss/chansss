@@ -1,5 +1,5 @@
 <template>
-  <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
+  <Win98Dialog width="800px" height="600px" :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <ToolBar :btns="toolBarBtns" @toolBarEventCallBack="toolBarEventCallBack" />
     <div class="orbit-container">
       <Earth3D ref="earth" />
@@ -117,8 +117,7 @@ export default {
 
 <style lang="less" scoped>
 .orbit-container {
-  width: 800px;
-  height: 600px;
+  height:calc(100% - 26px);
   position: relative;
 }
 .sat-meta {

@@ -17,30 +17,33 @@
             alt=""
           >
         </button>
-        <button
-          v-show="!isMaximize"
-          class="win98-button"
-          @click="dialogMaximize"
-        >
-          <img
-            class="win98-icon maximize"
-            size="custom"
-            name="window-maximize"
-            title="Maximize"
-            src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWDI4Ym732IngzMmqvthXm3klUo2RmAQA7"
-            alt=""
+        <template v-if="canResize">
+
+          <button
+            v-show="!isMaximize"
+            class="win98-button"
+            @click="dialogMaximize"
           >
-        </button>
-        <button v-show="isMaximize" class="win98-button" @click="dialogRestore">
-          <img
-            class="win98-icon restore"
-            size="custom"
-            name="window-restore"
-            title="Restore"
-            src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWjI8ZwK3tEkDzQLbozVZX83HUKG1HAQA7"
-            alt=""
-          >
-        </button>
+            <img
+              class="win98-icon maximize"
+              size="custom"
+              name="window-maximize"
+              title="Maximize"
+              src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWDI4Ym732IngzMmqvthXm3klUo2RmAQA7"
+              alt=""
+            >
+          </button>
+          <button v-show="isMaximize" class="win98-button" @click="dialogRestore">
+            <img
+              class="win98-icon restore"
+              size="custom"
+              name="window-restore"
+              title="Restore"
+              src="data:image/gif;base64,R0lGODlhDAAKAIABAAAAAAQz/yH5BAEKAAEALAAAAAAMAAoAAAIWjI8ZwK3tEkDzQLbozVZX83HUKG1HAQA7"
+              alt=""
+            >
+          </button>
+        </template>
         <button class="win98-button" @click="commonClick($event, 'close')">
           <img
             class="win98-icon close"
@@ -57,26 +60,28 @@
       <slot />
     </div>
     <div class="win98-dialog--footer" />
-    <div
-      class="win98-dialog__resize-left"
-      @mousedown="mouseDownAndMoveEvent($event, 'leftResize')"
-    />
-    <div
-      class="win98-dialog__resize-right"
-      @mousedown="mouseDownAndMoveEvent($event, 'rightResize')"
-    />
-    <div
-      class="win98-dialog__resize-top"
-      @mousedown="mouseDownAndMoveEvent($event, 'topResize')"
-    />
-    <div
-      class="win98-dialog__resize-bottom"
-      @mousedown="mouseDownAndMoveEvent($event, 'bottomResize')"
-    />
-    <div
-      class="win98-dialog__resize-corner"
-      @mousedown="mouseDownAndMoveEvent($event, 'cornerResize')"
-    />
+    <template v-if="canResize">
+      <div
+        class="win98-dialog__resize-left"
+        @mousedown="mouseDownAndMoveEvent($event, 'leftResize')"
+      />
+      <div
+        class="win98-dialog__resize-right"
+        @mousedown="mouseDownAndMoveEvent($event, 'rightResize')"
+      />
+      <div
+        class="win98-dialog__resize-top"
+        @mousedown="mouseDownAndMoveEvent($event, 'topResize')"
+      />
+      <div
+        class="win98-dialog__resize-bottom"
+        @mousedown="mouseDownAndMoveEvent($event, 'bottomResize')"
+      />
+      <div
+        class="win98-dialog__resize-corner"
+        @mousedown="mouseDownAndMoveEvent($event, 'cornerResize')"
+      />
+    </template>
   </div>
 </template>
 
@@ -87,6 +92,18 @@ export default {
     zIndex: {
       type: Number,
       required: true
+    },
+    width: {
+      type: String,
+      default: '300px'
+    },
+    height: {
+      type: String,
+      default: '300px'
+    },
+    canResize: {
+      type: Boolean,
+      default: true
     },
     title: {
       type: String,
@@ -107,9 +124,14 @@ export default {
   computed: {
     dialogStyle() {
       return {
-        'z-index': this.zIndex
+        'z-index': this.zIndex,
+        'width': this.width,
+        'height': this.height
       }
     }
+  },
+  created() {
+    console.log(this.canResize)
   },
   methods: {
     commonClick(event, eventName) {
@@ -185,6 +207,7 @@ export default {
         this.commonMoveEvent(dom, e, this.dragMoveEvent)
       }
       const dom = e.path[1]
+
       if (type === 'leftResize') {
         this.commonMoveEvent(dom, e, this.leftResizeEvent)
       }
