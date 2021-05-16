@@ -20,7 +20,7 @@
     </div>
     <div class="win98-dialog--content">
       <div v-if="type === 'confirm'" class="confirm">
-        <textarea v-model="confirmText" class="win98-input input" type="text" rows="4" cols="50" />
+        <textarea v-model="confirmText" class="win98-input input" type="text" rows="6" cols="50" />
       </div>
       <div v-if="type === 'message'" class="message">
         <slot />
@@ -102,7 +102,7 @@ export default {
   .confirm{
     padding: 10px;
     .input{
-      width: 180px;
+      width: 100%;
       margin: auto;
     }
   }

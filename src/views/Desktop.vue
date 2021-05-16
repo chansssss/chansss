@@ -26,7 +26,7 @@
         <component
           :is="window.componentName"
           v-show="!window.minimize"
-          :key="index"
+          :key="window.uuid"
           :window="window"
           @windowEventCallBack="windowEventCallBack"
         />

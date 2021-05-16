@@ -131,7 +131,6 @@ export default {
     }
   },
   created() {
-    console.log(this.canResize)
   },
   methods: {
     commonClick(event, eventName) {
@@ -155,7 +154,6 @@ export default {
     },
     dialogRestore(e) {
       const dom = e.path[4]
-      console.log(dom)
       dom.style.top = this.dialog.top + 'px'
       dom.style.left = this.dialog.left + 'px'
       dom.style.width = this.dialog.width + 'px'

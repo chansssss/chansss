@@ -211,10 +211,11 @@ export default {
       flex-wrap: wrap;
       align-content: flex-start;
       .file-item {
-        margin-right: 12px;
+        margin-left: 12px;
         padding-top: 10px;
+        padding-left: 10px;
         height: 80px;
-        width: 75px;
+        width: 65px;
         &:hover {
           .file-icon {
             img {

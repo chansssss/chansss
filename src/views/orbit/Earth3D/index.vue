@@ -88,7 +88,9 @@ export default {
         canvas: canvas,
         alpha: true
       })
-      new OrbitControls(this.camera, this.renderer.domElement)
+      const controls = new OrbitControls(this.camera, this.renderer.domElement)
+      controls.minDistance = 20
+      controls.maxDistance = 50
       this.renderer.setSize(sizes.width, sizes.height)
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     },
@@ -275,6 +277,6 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: #2f3640;
 }
 </style>
