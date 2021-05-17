@@ -104,7 +104,6 @@ export default {
       }, 1000)
     },
     addTle(tle) {
-      console.log('addtle')
       this.$refs.earth.handlerDrawSatAnOrbit(tle)
     },
     getSatPoint() {

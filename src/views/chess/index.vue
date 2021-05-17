@@ -296,7 +296,6 @@ export default {
     // 判断象的落点是否合法
     canMoveOfXiang(c_x, c_y, t_x, t_y) {
       const { count, axis, distance } = this.computerTwoPoint(c_x, c_y, t_x, t_y)
-      console.log(count, axis, distance)
       if (axis === 'oblique' && Math.abs(distance) === 2 && count === 0) return true
       return false
     },
@@ -404,7 +403,6 @@ export default {
 
       this.currentSelectChessman = null
       // 更新 帅 的点
-      console.log(this.chessboard[targetX][targetY])
       if (currentPoint.name === '帅') {
         this.kingsPoint[currentPoint.type] = this.chessboard[targetX][targetY]
       } else if (targetName === '帅') {

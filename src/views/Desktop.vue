@@ -22,7 +22,7 @@
           <div class="application-shortcut--name">{{ application.name }}</div>
         </div>
       </div>
-      <template v-for="(window, index) in windows">
+      <template v-for="window in windows">
         <component
           :is="window.componentName"
           v-show="!window.minimize"
@@ -111,6 +111,9 @@ export default {
       nowTime: dayjs(new Date()).format('hh:mm A'),
       networkImg: require('@/assets/imgs/network.png')
     }
+  },
+  created() {
+    this.updateTime()
   },
   methods: {
     updateTime() {

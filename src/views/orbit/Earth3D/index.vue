@@ -155,7 +155,6 @@ export default {
         stepMS: stepMS,
         isLngLatFormat: true
       }).then(function(threeOrbitsArr) {
-        console.log(threeOrbitsArr)
         let orbit = threeOrbitsArr[1]
         if (!orbit) {
           orbit = threeOrbitsArr[0]
