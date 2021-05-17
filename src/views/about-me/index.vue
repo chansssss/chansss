@@ -11,7 +11,7 @@
         </template>
         <template v-slot:next3>
           <img src="../../assets/imgs/about-me.jpeg" height="300" alt="me" sizes="" srcset="">
-          左一(地点：湖北京山)
+          左一
         </template>
       </Nexttt>
     </div>
