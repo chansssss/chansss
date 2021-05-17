@@ -3,9 +3,12 @@
     <div class="win98-dialog--header header">
       <div
         class="win98-dialog--dragmove-bar"
+        style="z-index:999999"
         @mousedown="mouseDownAndMoveEvent($event, 'dragMove')"
       />
-      <div class="win98-dialog--title title win98-text">{{ title }}</div>
+      <div class="win98-dialog--title title win98-text">
+        <span>{{ title }}</span>
+      </div>
       <div class="win98-dialog--buttons">
         <button class="win98-button" @click="commonClick($event, 'minimize')">
           <img
@@ -105,6 +108,10 @@ export default {
       type: Boolean,
       default: true
     },
+    icon: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: ''
@@ -202,6 +209,7 @@ export default {
     mouseDownAndMoveEvent(e, type) {
       if (type === 'dragMove') {
         const dom = e.path[2]
+        console.log(dom)
         this.commonMoveEvent(dom, e, this.dragMoveEvent)
       }
       const dom = e.path[1]
@@ -281,5 +289,7 @@ export default {
 .title {
   font-size: calc(10 * var(--px));
   text-align: left;
+  line-height: 18px;
+  position: relative;
 }
 </style>
