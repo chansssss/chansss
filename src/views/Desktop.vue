@@ -117,6 +117,13 @@ export default {
           hasLaunched: false,
           img: require('@/assets/imgs/chess.png'),
           componentName: 'Chess'
+        },
+        {
+          name: 'MarkDown',
+          hasMultiple: true,
+          hasLaunched: false,
+          img: require('@/assets/imgs/markdown.png'),
+          componentName: 'ChanMarkdown'
         }
       ],
       windows: [],
