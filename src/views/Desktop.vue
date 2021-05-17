@@ -91,6 +91,20 @@ export default {
           componentName: 'MyComputer'
         },
         {
+          name: '关于我',
+          hasMultiple: false,
+          hasLaunched: false,
+          img: require('@/assets/imgs/me.png'),
+          componentName: 'AboutMe'
+        },
+        {
+          name: '关于此站',
+          hasMultiple: false,
+          hasLaunched: false,
+          img: require('@/assets/imgs/project.png'),
+          componentName: 'AboutProject'
+        },
+        {
           name: '卫星跟踪',
           hasMultiple: false,
           hasLaunched: false,
@@ -128,6 +142,7 @@ export default {
         componentName: application.componentName,
         actived: true,
         name: application.name,
+        img: application.img,
         minimize: false,
         zIndex: this.zIndex++,
         uuid: uuidv4()

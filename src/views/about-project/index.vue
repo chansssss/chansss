@@ -1,13 +1,13 @@
 <template>
   <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <div class="container">
-      <p>Chan</p>
+      <p>Chansss</p>
       <p>
-        <a href="https://chansssss.github.io/chansss/#/">chansss</a>网站作者
+        此网站的灵感来源于
+        <a href="https://ash.ms/">ash.ms</a>,在此表示感谢。
       </p>
-      <p>四年的Web开发经验</p>
-      <p>有过GIS及WebGL相关产品的开发经验</p>
-      <p>熟悉JavaScript、Java及Python开发语言</p>
+      <p>类Win98风格的UI</p>
+      <p>独立开发象棋，卫星追踪，五子棋等程序</p>
     </div>
   </Win98Dialog>
 </template>
@@ -15,7 +15,7 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: 'AboutMe',
+  name: 'AboutProject',
   props: {
     window: {
       type: Object,
