@@ -143,7 +143,7 @@ export default {
       }, 1000)
     },
     // 启动应用的前置操作
-    launchApplicationBefore(event, application) {
+    launchApplicationBefore(event, application, content) {
       if (this.applicationWaitMap[application.componentName]) {
         return
       }
@@ -154,6 +154,7 @@ export default {
         name: application.name,
         img: application.img,
         minimize: false,
+        content: content,
         zIndex: this.zIndex++,
         uuid: uuidv4()
       }
@@ -214,7 +215,7 @@ export default {
       }
     },
     // 应用窗口的事件回调
-    windowEventCallBack({ uuid, eventName }) {
+    windowEventCallBack({ uuid, eventName, launcher, content }) {
       const window = this.getWindowByUUID(uuid)
       if (window) {
         if (eventName === 'minimize') {
@@ -227,7 +228,27 @@ export default {
         if (eventName === 'active') {
           this.activeWindow(uuid)
         }
+        if (eventName === 'launch-file') {
+          this.launchFile(launcher, content)
+        }
       }
+    },
+    launchFile(launcher, content) {
+      const app = this.getApplicationByComponentName(launcher)
+      if (app) {
+        this.launchApplicationBefore(null, app, content)
+      }
+    },
+    getApplicationByComponentName(componentName) {
+      let application = null
+      for (let i = 0; i < this.applications.length; i++) {
+        const element = this.applications[i]
+        if (element.componentName === componentName) {
+          application = element
+          return application
+        }
+      }
+      return application
     },
     // 根据uuid获取应用窗口
     getWindowByUUID(uuid) {

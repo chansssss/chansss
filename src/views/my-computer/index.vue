@@ -47,14 +47,10 @@
           <div v-for="(folder,index) in nowFolder" :key="index" class="file-item" @click="callFolder(folder)">
             <div class="file-icon">
               <img
-                class="ui95-icon ui95-icon--folder ui95-icon--32 ui95-icon--file-icon"
                 size="32"
-                name="folder"
-                classnames="file-icon"
                 width="32"
                 height="32"
-                src="data:image/gif;base64,R0lGODlhIAAgAOMJAAAAABAQEDExAJycAM7OY//OnP//nP//9////wQz/wQz/wQz/wQz/wQz/wQz/wQz/yH5BAEKAA8ALAAAAAAgACAAAATH8MlJq7146L0D/tSAGGRJDh6YjWaLqtZwtLTxwtJA7Hzvc0BgDkEsGo2Ho7IIeIhqUFOBNKUaCIFntDTtcr8FgkC7hVYL1euYVQZ/uWJyzZtu0ePstoG+/+LNUnNUXX9bZ32IaVOFgYaJZ4x2fV1eb2hqcnVRlHuXYWs0ipOJVp2fcpKBnpyLoJWviFxolGiRqayKs3uFsFaHpo94mmeHxLSzjL2enYPHwqPQ0Mu6pz7W19g9Ag8C3d7f4OHi3Tjl5ufo6eroEQA7"
-                alt=""
+                :src="folder.icon"
               >
             </div>
             <div class="file-name">
@@ -81,17 +77,21 @@ export default {
     return {
       folders: [
         {
-          name: 'file1',
-          icon: '',
+          name: '我的文档',
+          icon: require('@/assets/imgs/folder.png'),
           type: 'folder',
           childrens: [
             {
-              name: 'file2',
-              icon: '',
+              name: 'Hello.md',
+              icon: require('@/assets/imgs/file.png'),
+              content: '#Hello',
+              suffix: 'md',
               type: 'file'
             }, {
-              name: 'file3',
-              icon: '',
+              name: 'World.md',
+              icon: require('@/assets/imgs/file.png'),
+              content: '#World',
+              suffix: 'md',
               type: 'file'
             }
           ]
@@ -108,13 +108,20 @@ export default {
       if (file.type === 'folder') {
         this.nowFolder = file.childrens ? file.childrens : []
       } else {
-        (
-          this.launchFile(file)
-        )
+        this.launchFile(file)
       }
     },
     launchFile(file) {
-      console.log(file)
+      let launcher = ''
+      if (file.suffix === 'md') {
+        launcher = 'ChanMarkdown'
+      }
+      this.$emit('windowEventCallBack', {
+        uuid: this.window.uuid,
+        launcher: launcher,
+        content: file.content,
+        eventName: 'launch-file'
+      })
     },
     eventCallBack({ event, eventName }) {
       this.$emit('windowEventCallBack', {

@@ -1,5 +1,11 @@
 <template>
-  <Win98Dialog :z-index="window.zIndex" width="800px" height="600px" :title="window.name" @eventCallBack="eventCallBack">
+  <Win98Dialog
+    :z-index="window.zIndex"
+    width="800px"
+    height="600px"
+    :title="window.name"
+    @eventCallBack="eventCallBack"
+  >
     <ToolBar :btns="toolBarBtns" @toolBarEventCallBack="toolBarEventCallBack" />
     <div class="ws-markdown_container">
       <div class="ws-markdown">
@@ -86,9 +92,13 @@ export default {
           type: 'confirm'
         },
         {
+          name: '导出HTML文件',
+          type: 'confirm'
+        },
+        {
           name: '帮助',
           type: 'message',
-          content: '卫星追踪软件，使用卫星的tle数据计算出卫星轨道以及实时位置等信息。tle数据来源:<a href="http://celestrak.com/NORAD/elements"  target="_blank">celestrak</a>'
+          content: 'Markdown编辑器'
         }
       ],
       title: 'undefined',
@@ -103,6 +113,7 @@ export default {
   watch: {},
   created() {
     this.isEditorMode = this.mode === 'editor'
+    this.content = this.window.content || this.content
   },
   mounted() {
     this.html = this.md.render(this.content)
@@ -110,7 +121,12 @@ export default {
   methods: {
     toolBarEventCallBack({ btnName, data }) {
       if (btnName === '导出MD文件') {
-        console.log(data)
+        this.title = data
+        this.exportMd()
+      }
+      if (btnName === '导出HTML文件') {
+        this.title = data
+        this.exportHtml()
       }
     },
     eventCallBack({ event, eventName }) {
@@ -121,14 +137,21 @@ export default {
       })
     },
     exportMd() {
-      const mdContent = document.getElementsByClassName('ws-markdown_editor')[0].innerText
+      const mdContent = this.content
       var FileSaver = require('file-saver')
       var blob = new Blob([mdContent], {
         type: 'text/plain;charset=utf-8'
       })
-      const title = document.getElementsByClassName('custom_tool-bar_left')[0].innerText
-      this.title = title || 'undefined'
+      this.title = this.title || 'undefined'
       FileSaver.saveAs(blob, `${this.title}.md`)
+    },
+    exportHtml() {
+      var FileSaver = require('file-saver')
+      var blob = new Blob([this.html], {
+        type: 'text/plain;charset=utf-8'
+      })
+      this.title = this.title || 'undefined'
+      FileSaver.saveAs(blob, `${this.title}.html`)
     },
     exportPdf() {
       this.editorVisible = false
@@ -234,6 +257,7 @@ export default {
     },
     changeText(el) {
       const mdContent = el.target.innerText
+      this.content = mdContent
       this.html = this.md.render(mdContent)
     }
   }
@@ -255,7 +279,7 @@ export default {
   justify-content: space-between;
 }
 
-.custom_tool-bar_left{
+.custom_tool-bar_left {
   color: white;
   text-align: left;
   height: 100%;
