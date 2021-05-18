@@ -89,10 +89,12 @@ export default {
       toolBarBtns: [
         {
           name: '导出MD文件',
+          title: '输入文件名',
           type: 'confirm'
         },
         {
           name: '导出HTML文件',
+          title: '输入文件名',
           type: 'confirm'
         },
         {
@@ -104,6 +106,7 @@ export default {
       title: 'undefined',
       html: '',
       content: '# Hello World',
+      outputContent: '',
       previewVisible: true,
       editorVisible: true,
       syncScroll: true,
@@ -114,6 +117,7 @@ export default {
   created() {
     this.isEditorMode = this.mode === 'editor'
     this.content = this.window.content || this.content
+    this.outputContent = this.content
   },
   mounted() {
     this.html = this.md.render(this.content)
@@ -137,7 +141,7 @@ export default {
       })
     },
     exportMd() {
-      const mdContent = this.content
+      const mdContent = this.outputContent
       var FileSaver = require('file-saver')
       var blob = new Blob([mdContent], {
         type: 'text/plain;charset=utf-8'
@@ -234,7 +238,6 @@ export default {
         }).then((canvas) => {
           var contentWidth = canvas.width
           var contentHeight = canvas.height
-          console.log(contentWidth, contentHeight)
           var pdfX = ((contentWidth + 10) / 2) * 0.75
           var pdfY = ((contentHeight + 500) / 2) * 0.75// 500为底部留白
           var imgX = pdfX
@@ -257,7 +260,7 @@ export default {
     },
     changeText(el) {
       const mdContent = el.target.innerText
-      this.content = mdContent
+      this.outputContent = mdContent
       this.html = this.md.render(mdContent)
     }
   }

@@ -1,7 +1,6 @@
 // import mermaid from 'mermaid'
 import 'highlight.js/styles/default.css'
 import MarkdownIt from 'markdown-it'
-import mermaid from 'mermaid'
 export default {
   data() {
     return {
@@ -10,7 +9,6 @@ export default {
   },
   methods: {
     initMarkdownIT() {
-      mermaid.initialize({ startOnLoad: true })
       var hljs = require('highlight.js')
       this.md = new MarkdownIt({
         highlight: function(str, lang) {
@@ -36,7 +34,5 @@ export default {
     this.initMarkdownIT()
   },
   mounted() {
-    mermaid.initialize({ startOnLoad: true })
   }
-
 }

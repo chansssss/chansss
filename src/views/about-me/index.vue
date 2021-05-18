@@ -4,12 +4,12 @@
       <Nexttt>
         <template v-slot:next1>
           <h1>ChenWei</h1>
-          <p>拥有四年的Web开发经验</p>
+          <p>1.拥有四年的Web开发经验</p>
+          <p>2.Gis以及WebGL的开发经验</p>
+          <p>3.能够设计简单的页面</p>
+          <p>4.熟悉前后端分离开发模式</p>
         </template>
         <template v-slot:next2>
-          <p>Gis以及WebGL的开发经验</p>
-        </template>
-        <template v-slot:next3>
           <img src="../../assets/imgs/about-me.jpeg" height="300" alt="me" sizes="" srcset="">
           左一
         </template>

@@ -33,7 +33,6 @@ export default {
   },
   mounted() {
     this.slotSize = this.setSlotSize()
-    console.log(this.slotSize)
   },
   methods: {
     setSlotSize() {

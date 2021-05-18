@@ -209,7 +209,6 @@ export default {
     mouseDownAndMoveEvent(e, type) {
       if (type === 'dragMove') {
         const dom = e.path[2]
-        console.log(dom)
         this.commonMoveEvent(dom, e, this.dragMoveEvent)
       }
       const dom = e.path[1]

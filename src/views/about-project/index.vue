@@ -1,13 +1,17 @@
 <template>
   <Win98Dialog :z-index="window.zIndex" :title="window.name" @eventCallBack="eventCallBack">
     <div class="container">
-      <p>Chansss</p>
-      <p>
-        此网站的灵感来源于
-        <a href="https://ash.ms/">ash.ms</a>,在此表示感谢。
-      </p>
-      <p>类Win98风格的UI</p>
-      <p>独立开发象棋，卫星追踪，五子棋等程序</p>
+      <Nexttt>
+        <template v-slot:next1>
+          <h3>Chansss</h3>
+          <p>
+            1.此网站的灵感来源于
+            <a href="https://ash.ms/">ash.ms</a>,在此表示感谢。
+          </p>
+          <p>2.此站还在迭代中，后续将加入更多有意思的东西</p>
+          <p>3.除部分css直接取自<a href="https://ash.ms/">ash.ms</a>，其他都是独立完成</p>
+        </template>
+      </Nexttt>
     </div>
   </Win98Dialog>
 </template>
@@ -44,6 +48,5 @@ export default {
   padding: 10px;
   width: 100%;
   height: 100%;
-  background-color: #fff;
 }
 </style>

@@ -9,7 +9,7 @@
     </span>
     <div v-show="show" class="tool-tip">
       <div class="modal" />
-      <ToolTip :z-index="99999" :type="clickBtn.type" class="dialog" @eventCallBack="toolTipEventCallBack">
+      <ToolTip :z-index="99999" :title="clickBtn.title" :type="clickBtn.type" class="dialog" @eventCallBack="toolTipEventCallBack">
         <div class="content" v-html="content">
           <span v-html="content" />
         </div>
